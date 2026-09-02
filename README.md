@@ -33,10 +33,35 @@ run plans and paces, readiness check-ins, and mobility/PT routines.
   when you tap an exercise's form link. All of it degrades offline: fonts fall back to
   system UI and the 3D body map falls back to the flat map.
 
+## Progression engine
+
+The performance-based progression is the core of the app, so it is worth stating what the
+rules actually are:
+
+- **Loaded lifts** ratchet on logged performance (`loadRec`). A session counts as clean when
+  the top set makes the week's rep target and every working set lands within one rep of it.
+  Beginners progress after one clean session, intermediates after two *at the same weight*.
+  One short session holds the load; two consecutive trigger a 10% reduction.
+- **How hard it felt** is an optional tap. When it is skipped the effort is inferred from the
+  reps — beating the top of the range by two or more counts as easy and progresses; merely
+  finishing is provisional and asks for one extra clean session before the bar moves. Silence
+  never reads as a full green light.
+- **Bodyweight work** climbs on reps to the top of the goal's range, then steps up to a harder
+  variation and rebuilds. Two sessions short of target step back down to an easier one.
+- **Load steps** scale with the lift (roughly 2.5–10%, floored at one 2.5 lb increment) and are
+  capped at 110% of the recent best so a mis-logged rep cannot spike the weight.
+- **Readiness** trims sets *and* the load: a "pull back" day seeds 7.5% lighter, a technique day
+  15%. Those sessions are marked, and the ratchet neither rewards nor punishes them.
+- **1RM estimates** use Epley with reps capped at 10, the range the formula is valid over, so a
+  high-rep burnout set can confirm a max but never inflate one.
+
+Progression history reads the archive as well as the current block, so earned weight survives
+a program rebuild.
+
 ## Notes on this snapshot
 
-This is the v191 preview build, committed verbatim. Two things in it are preview
-scaffolding rather than shipping behavior:
+This is the v191 preview build with the progression-audit fixes applied. Two things in it
+are preview scaffolding rather than shipping behavior:
 
 - The final `<script>` seeds a demo program and a few sample sessions on first load when
   no plan exists yet, so the preview opens onto a populated app instead of an empty one.

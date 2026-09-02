@@ -1922,6 +1922,12 @@ x}
 /* ── bodyweight level-up offer ── */
 .progline.levelup{border:1px solid color-mix(in srgb,var(--color-accent) 50%,transparent);background:color-mix(in srgb,var(--color-accent) 10%,var(--color-surface));border-radius:var(--radius-md);padding:9px 11px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .progline.levelup .progtag{font-weight:600;color:var(--color-text)}
+/* ── bodyweight step-back offer: same shape as the level-up, in the deload's own colour so a
+   regression never reads as a reward ── */
+.progline.regress{border:1px solid color-mix(in srgb,#c2621c 45%,transparent);background:color-mix(in srgb,#c2621c 9%,var(--color-surface));border-radius:var(--radius-md);padding:9px 11px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.progline.regress .progtag{font-weight:600;background:color-mix(in srgb,#c2621c 16%,transparent);color:#c2621c}
+.progline.regress .proglvl{background:#c2621c;color:#fff}
+.progline.hold .progtag{background:color-mix(in srgb,var(--color-text) 10%,transparent);color:var(--color-text);opacity:.82}
 .proglvl{font:inherit;font-size:.85rem;font-weight:600;border:0;border-radius:8px;padding:6px 13px;background:var(--color-accent);color:#12131a;cursor:pointer}
 .proglvl:active{transform:scale(.96)}
 
@@ -2006,7 +2012,18 @@ const localISO = d => {
 const todayISO = () => localISO(new Date());
 const pl = (n, word) => (+n === 1 ? word : word + 's');
 const fmtDate = iso => new Date(iso+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
-const e1rm = (w,r) => r>0 ? Math.round(w*(1+r/30)) : w;
+/* Epley, held to the range it is valid in. The formula tracks reality to about ten reps and
+   diverges hard above that, and the estimate is the MAXIMUM across all history — so one 25-rep
+   burnout set at 135 lb used to lift the estimated max from 171 to 248 and drag every "% 1RM"
+   in the program up with it, prescribing 180 lb for sets of eight to someone benching 135 for
+   eight. Reps past ten no longer add to the estimate: a high-rep set can confirm a max, never
+   inflate one. A true single also comes back as itself — the raw formula returned 1.033w. */
+const E1RM_MAX_REPS = 10;
+const e1rm = (w,r) => {
+  if(!(r > 0)) return w;
+  const n = Math.min(r, E1RM_MAX_REPS);
+  return n <= 1 ? Math.round(w) : Math.round(w*(1+n/30));
+};
 const pace = (mi,min) => mi>0 ? min/mi : 0;
 const fmtPace = p => {
   if(!(p>0)) return '—';
@@ -2321,7 +2338,15 @@ function weekCount(){ return Math.max(4, Math.min(12, state.weeks || (state.week
 function phaseOf(week, total){          // the 4-week wave repeats; the final week is always a deload
   const n = total || weekCount();
   if(week >= n) return 3;
-  return (week - 1) % 4;
+  const ph = (week - 1) % 4;
+  /* Two rules used to fire independently — every fourth week deloads, AND the last week always
+     deloads — so wherever they landed near each other the block lost its taper. A five-week
+     block spent its last two weeks unloading back to back; a nine-week block did the same; a
+     six-week block put one lone loading week between two deloads and gave a third of the block
+     to recovery. The scheduled deload gives way when the forced final one is already within
+     reach, leaving one unbroken run into the taper. Lengths 4, 8 and 12 are unaffected. */
+  if(ph === 3 && (n - week) < 3) return 2;
+  return ph;
 }
 const waveOf = week => Math.floor((week - 1) / 4) + 1;
 /* "60% 1RM" cannot be acted on without knowing the max. Where enough has been logged to
@@ -6979,8 +7004,20 @@ function ensureSets(ex){
     return best;
   })();
   const _prog = (function(){ try{ return progLoadSeed(exObj); }catch(e){ return null; } })();
-  const seed = _prog ? _prog.w
+  let seed = _prog ? _prog.w
     : (pct && tm) ? Math.round(tm * (+pct[1] / 100) / 2.5) * 2.5 : (prev || carry);
+  /* A poor readiness read used to trim a set and cap the RPE in words, while the weight field
+     was still pre-filled with the full progressed load — the banner said pull back and the
+     number said push, and the number is what gets lifted. The dose now reaches the load too.
+     Level 1 is untouched on purpose: trimming a set IS trimming the edges. */
+  const _arCut = (function(){
+    try{
+      const o = autoRegActive();
+      if(!o || !o.rpeCap) return 0;
+      return (o.moves || []).indexOf(name) > -1 ? (o.level >= 3 ? 0.15 : 0.075) : 0;
+    }catch(e){ return 0; }
+  })();
+  if(_arCut && seed > 0) seed = Math.max(2.5, Math.round(seed * (1 - _arCut) / 2.5) * 2.5);
   /* Warm-up sets in front of the working ones, now that the working load is known — so each row
      can name the weight to put on the bar and what that set is for, rather than "a little
      heavier". Ramped to roughly half then three-quarters of the day's working weight; when there
@@ -7166,8 +7203,12 @@ async function finishSession(){
   const skipped = Object.keys(ui.sess.sets).reduce((a, k)=>
     a + ui.sess.sets[k].filter(x=>x.skipped).length, 0);
 
+  /* Record that the readiness check lightened this day, so the ratchet can tell a deliberately
+     reduced session from a genuine one and neither reward nor punish the lifter for it. */
+  const _ar = (typeof autoRegActive === 'function') ? autoRegActive() : null;
   state.sessions.push({ id:Date.now(), date:todayISO(), week:state.week, dayId:d.id,
-    dayName:d.name, entries, volume:vol, minutes:mins, efforts:(ui.sess.effort || {}) });
+    dayName:d.name, entries, volume:vol, minutes:mins, efforts:(ui.sess.effort || {}),
+    autoreg: (_ar && _ar.level) ? _ar.level : 0 });
   ui.justFinished = todayISO();
   ui.sess = null; state.openSession = null;
   try{ localStorage.removeItem(SKEY); }catch(e){}
@@ -9159,8 +9200,13 @@ function targetRepsAt(exName, week){
 /* one movement's recent outcomes, newest first, each already judged hit/effort */
 function progHistory(exName, limit){
   const out = [];
-  for(let i = state.sessions.length - 1; i >= 0 && out.length < (limit || 5); i--){
-    const s = state.sessions[i];
+  /* Every block counts. progHistory used to read state.sessions, which archiveCurrent() empties
+     when a program is filed away — so building a new block silently threw away the earned weight
+     and re-seeded the lift from a percentage, handing back weeks of progress. The 1RM estimate
+     already read the archive; the ratchet does now too. */
+  const all = allHistory().sessions;
+  for(let i = all.length - 1; i >= 0 && out.length < (limit || 5); i--){
+    const s = all[i];
     const e = (s.entries || {})[exName];
     if(!e || !e.length) continue;
     const work = e.filter(x=>!x.warm);
@@ -9168,8 +9214,18 @@ function progHistory(exName, limit){
     const top = work.reduce((a, b)=> (b.w > a.w || (b.w === a.w && b.r > a.r)) ? b : a);
     const tR = targetRepsAt(exName, s.week) || top.r;
     const hit = top.r >= tR && work.every(x=> x.r >= Math.max(1, tR - 1));
-    const eff = (s.efforts || {})[exName] || (hit ? 'solid' : 'grind');   // reps-only fallback
-    out.push({ date:s.date, week:s.week, w:+top.w || 0, r:+top.r || 0, targetR:tR, hit, eff });
+    /* How hard it felt is the brake on the whole ratchet, and the tap that records it is
+       optional — so what silence means decides how the app behaves for most people. Reading
+       silence as "solid" made every session the lifter simply finished an earned one, which is
+       an unbounded linear progression wearing an autoregulation costume: it waits for a missed
+       rep instead of preventing one. Silence is now read from the reps themselves, which are
+       objective. Beating the top of the prescribed range by two or more is real evidence of
+       reps in reserve and counts as easy; merely finishing is provisional — marked assumed, and
+       loadRec asks for one more clean session before it moves the bar. */
+    const tapped = (s.efforts || {})[exName] || null;
+    const eff = tapped || (!hit ? 'grind' : (top.r >= tR + 2 ? 'easy' : 'solid'));
+    out.push({ date:s.date, week:s.week, w:+top.w || 0, r:+top.r || 0, targetR:tR, hit, eff,
+      assumed: !tapped, dosed: !!s.autoreg });
   }
   return out;
 }
@@ -9187,19 +9243,28 @@ function loadStep(exName, w){
 
 /* the weekly speed limit: a movement can't be seeded more than ~10% over its recent best,
    so a mis-logged rep or a fluke can't spike the load */
-function speedCap(exName, target){
+function speedCap(exName, target, floor){
   const recent = progHistory(exName, 3).map(h=>h.w).filter(x=>x > 0);
   if(!recent.length) return target;
-  const ceiling = Math.max.apply(null, recent) * 1.10;
-  return Math.min(target, Math.round(ceiling / 2.5) * 2.5);
+  let ceiling = Math.round(Math.max.apply(null, recent) * 1.10 / 2.5) * 2.5;
+  /* Rounding the 10% ceiling to the nearest plate put it BELOW the current weight on light
+     work — under 12.5 lb, 110% rounds back down to where you already are — so the cap and the
+     step cancelled and the lift held forever however well it went. The ceiling is never allowed
+     below one honest increment above the current load. */
+  if(floor != null) ceiling = Math.max(ceiling, floor);
+  return Math.min(target, ceiling);
 }
 
 /* THE RATCHET — for a loaded movement, what weight to put on the bar next, and why */
 function loadRec(exName){
-  const h = progHistory(exName, 5);
+  /* A day the readiness check deliberately lightened is not evidence about the weight: the
+     lifter was told to pull back, so clearing it earns nothing and it must not become the base
+     the next session is figured from. Dosed days that went well drop out; a dosed day they
+     still ground through stays, because that IS information. */
+  const h = progHistory(exName, 6).filter(x=> !(x.dosed && x.hit));
   if(!h.length || !h[0].w) return null;             // first exposure — let the default seed stand
   const last = h[0], w = last.w, step = loadStep(exName, w);
-  const up = () => Math.max(w, speedCap(exName, w + step));
+  const up = () => Math.max(w, speedCap(exName, w + step, w + 2.5));
 
   if(last.eff === 'grind' || !last.hit){
     const prevBack = h[1] && (h[1].eff === 'grind' || !h[1].hit);
@@ -9217,16 +9282,27 @@ function loadRec(exName){
   if(last.eff === 'hard'){
     return { w:w, action:'hold', why:'You hit your reps, but it was a real fight — so bank this weight once more before adding.' };
   }
-  // solid + hit → count consecutive earned sessions
-  let earns = 0;
-  for(const x of h){ if(x.hit && (x.eff === 'solid' || x.eff === 'easy')) earns++; else break; }
-  if(earns >= earnedThreshold()){
+  /* solid + hit → count consecutive earned sessions AT THIS WEIGHT. The streak used to run
+     straight through a weight change, so the threshold only ever bit once in a lift's life:
+     after the first bump an intermediate progressed every session, exactly like a beginner,
+     while the screen said "one more clean session at this weight". It now counts what it says
+     it counts. A streak resting on assumed efforts — sessions where nobody tapped how it felt —
+     asks for one extra clean session before the bar moves. */
+  let earns = 0, assumed = false;
+  for(const x of h){
+    if(x.w !== w) break;
+    if(x.hit && (x.eff === 'solid' || x.eff === 'easy')){ earns++; if(x.assumed) assumed = true; }
+    else break;
+  }
+  const bar = earnedThreshold() + (assumed ? 1 : 0);
+  if(earns >= bar){
     const nw = up();
-    return nw > w ? { w:nw, action:'progress', why:'Clean reps ' + earns + ' session' + (earns === 1 ? '' : 's') + ' running — it goes up ' + (nw - w) + ' lb.' }
+    return nw > w ? { w:nw, action:'progress', why:'Clean reps ' + earns + ' session' + (earns === 1 ? '' : 's') + ' running at ' + w + ' lb — it goes up ' + (nw - w) + ' lb.' }
                   : { w:w, action:'hold', why:'Earned, but this is as fast as it should climb this week. It moves next time.' };
   }
-  const need = earnedThreshold() - earns;
-  return { w:w, action:'hold', why:'Solid work. ' + need + ' more clean session' + (need === 1 ? '' : 's') + ' at this weight and it goes up.' };
+  const need = bar - earns;
+  return { w:w, action:'hold', why:'Solid work. ' + need + ' more clean session' + (need === 1 ? '' : 's') + ' at ' + w + ' lb and it goes up.' +
+    (assumed ? ' Tap how a set felt and it can move sooner — an untapped session counts, just more cautiously.' : '') };
 }
 
 /* Bodyweight and holds progress by reps/seconds rather than load — but reps are not an open
@@ -9245,7 +9321,15 @@ function repRec(exName, baseReps){
   const last = h[0], m = byName[exName];
   const ceiling = repCeiling(exName);
   const cur = Math.min(ceiling, Math.max(last.r || 0, baseReps || 0));
-  if(last.eff === 'grind' || !last.hit) return { r:cur, action:'hold', why:'Hold the reps here until they come clean.' };
+  if(last.eff === 'grind' || !last.hit){
+    /* Two bad sessions running is the same signal that earns a loaded lift its 10% deload. There
+       is no weight to take off a bodyweight movement, so the equivalent is the rung below — and
+       if the kit has no easier rung, say so plainly rather than showing nothing at all. */
+    const backTo = (h[1] && (h[1].eff === 'grind' || !h[1].hit) && !isTimedMove(m)) ? prevVariation(exName) : null;
+    if(backTo) return { r:cur, action:'regress', next:backTo.n,
+      why:'Two sessions short of the target now. There is no weight to strip off a bodyweight movement, so the honest step is back to ' + backTo.n + ' — own the reps there and climb again. Grinding a movement you cannot control yet buys nothing.' };
+    return { r:cur, action:'hold', why:'You came up short of ' + (last.targetR || cur) + ', so the target holds here until the reps come clean. Quality first, then the count.' };
+  }
   let earns = 0; for(const x of h){ if(x.hit && x.eff !== 'hard' && x.eff !== 'grind') earns++; else break; }
   const earned = last.eff === 'easy' || earns >= earnedThreshold();
   const atTop = Math.max(last.r || 0, baseReps || 0) >= ceiling;
@@ -9279,6 +9363,23 @@ function nextVariation(exName){
   ).sort((a, b) => ((a.skill || 2) - (b.skill || 2)) || ((a.tier || 2) - (b.tier || 2)) || a.n.localeCompare(b.n));
   return cands[0] || null;
 }
+/* The rung below. The ladder only ever went up, so a lifter who could not hit the prescribed
+   reps on a bodyweight movement was held there indefinitely — a loaded lift in the same position
+   gets a 10% deload after two bad sessions, and bodyweight got nothing to step back onto. Same
+   pattern, same tissue, one skill step easier, still inside their kit and clear of injuries. */
+function prevVariation(exName){
+  const m = byName[exName];
+  if(!m || loadKindOf(m) !== 'bw' || isTimedMove(m)) return null;
+  const curSkill = m.skill || 2, groups = m.g || [];
+  const gate = x => (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50;
+  const cands = BANK.filter(x =>
+    x.n !== exName && loadKindOf(x) === 'bw' && !isBandMove(x) &&
+    x.p === m.p && (x.g || []).some(g => groups.indexOf(g) > -1) &&
+    (x.skill || 2) < curSkill && equipPick(x).include &&
+    !(x.x || []).some(k => (setup.injuries || []).indexOf(k) > -1) && gate(x)
+  ).sort((a, b) => ((b.skill || 2) - (a.skill || 2)) || ((a.tier || 2) - (b.tier || 2)) || a.n.localeCompare(b.n));
+  return cands[0] || null;
+}
 /* Earned complexity step, opt-in. Reuses the manual-swap path so the new movement persists into the
    plan and the session rebuilds its sets from the harder movement — which, being harder, seeds
    fewer earned reps and rebuilds the pattern before overloading it again. */
@@ -9301,6 +9402,26 @@ async function levelUp(exName){
   if(i > -1) ui.sess.i = i;
   writeOpenSession(); await save(); render();
   toast('Leveled up to ' + nxt.n + ' — rebuild the pattern, then overload it again');
+}
+
+/* Stepping back down the same ladder. Deliberately opt-in like levelUp — the app proposes it,
+   the lifter decides; nothing is swapped out from under them mid-session. */
+async function levelDown(exName){
+  if(!ui.sess) return;
+  const prv = prevVariation(exName);
+  if(!prv){ toast('Nothing easier to step back to — keep the reps clean and hold here'); return; }
+  const d = day(ui.sess.dayId);
+  const raw = (d.exercises || []).find(x => x.name === exName);
+  if(!raw) return;
+  const gk = goalForTier(prv.tier, prv.p);
+  ui.sess.swaps[exName] = prv.n;
+  raw.name = prv.n; raw.note = prv.note; raw.goal = gk;
+  raw.targets = genTargets(3, gk, weekCount(), prv.p, prv.tier, d.dayIdx || 0, 0, loadKindOf(prv), prv.n);
+  if(ui.sess.sets) delete ui.sess.sets[exName];
+  const i = (d.exercises || []).findIndex(x => x.name === prv.n);
+  if(i > -1) ui.sess.i = i;
+  writeOpenSession(); await save(); render();
+  toast('Stepped back to ' + prv.n + ' — own this one, then climb again');
 }
 
 /* what the seed hooks call */
@@ -9340,10 +9461,22 @@ function progSuggestLine(ex){
   const m = byName[ex.name]; if(!m) return '';
   if(loadKindOf(m) === 'bw' || isTimedMove(m)){
     const rr = progRepSeed(ex, targetReps(ex));
-    if(!rr || rr.action === 'hold') return '';
+    if(!rr) return '';
     if(rr.action === 'levelup'){
       return '<div class="progline levelup"><span class="progtag">\u2b06 Ready to level up \u2014 ' + esc(rr.next) + '</span>' +
         '<button class="proglvl" onclick="levelUp(\'' + jsq(ex.name) + '\')">Level up</button>' +
+        '<button class="linkq" onclick="whyProg(\'' + jsq(ex.name) + '\')">why?</button></div>';
+    }
+    if(rr.action === 'regress'){
+      return '<div class="progline regress"><span class="progtag">\u2b07 Step back \u2014 ' + esc(rr.next) + '</span>' +
+        '<button class="proglvl" onclick="levelDown(\'' + jsq(ex.name) + '\')">Step back</button>' +
+        '<button class="linkq" onclick="whyProg(\'' + jsq(ex.name) + '\')">why?</button></div>';
+    }
+    /* A hold used to render nothing at all, so the one lifter who most needed telling why the
+       number was not moving was the only one shown no reason. */
+    if(rr.action === 'hold'){
+      const unitH = isTimedMove(m) ? 's' : ' reps';
+      return '<div class="progline hold"><span class="progtag">\u2192 hold ' + rr.r + unitH + '</span>' +
         '<button class="linkq" onclick="whyProg(\'' + jsq(ex.name) + '\')">why?</button></div>';
     }
     const unit = isTimedMove(m) ? 's' : ' reps';
