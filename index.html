@@ -310,11 +310,11 @@ textarea.input { min-height: 90px; resize: vertical; }
 
 
 </style>
-<!-- GLTFLoader imports "three" by bare name; the map is what resolves it. -->
+<!-- three is imported by bare name; the map is what resolves it. -->
 <script type="importmap">
 {"imports":{
-  "three":"https://unpkg.com/three@0.160.0/build/three.module.js",
-  "three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
 }}
 </script>
 <style>
@@ -1928,6 +1928,15 @@ x}
 .progline.regress .progtag{font-weight:600;background:color-mix(in srgb,#c2621c 16%,transparent);color:#c2621c}
 .progline.regress .proglvl{background:#c2621c;color:#fff}
 .progline.hold .progtag{background:color-mix(in srgb,var(--color-text) 10%,transparent);color:var(--color-text);opacity:.82}
+
+/* ── dragging a session between days on the Today calendar ── */
+.calcell.movable{cursor:grab;touch-action:pan-y}
+.calcell.dragging{cursor:grabbing;z-index:5;position:relative;opacity:.94;
+  transform-origin:center;box-shadow:var(--shadow-lg);border-radius:12px;
+  background:var(--color-surface);transition:none}
+.calcell.dropinto{border-radius:12px;
+  box-shadow:inset 0 0 0 2px var(--color-accent);
+  background:color-mix(in srgb,var(--color-accent) 12%,transparent)}
 
 /* ── manage schedule ── */
 .msweek{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:9px}
@@ -7888,13 +7897,15 @@ function calendarCard(){
     const label = r.lift ? r.lift : (r.run ? (r.run.label || 'Run') : '');
     const mark = didLift || didRun ? '✓' : past && label ? '×' : label ? '·' : '';
     return '<div class="calcell' + (isToday ? ' now' : '') + (label ? '' : ' empty') +
-      (didLift || didRun ? ' hit' : '') + '" onclick="pickCalDay(' + i + ')">' +
+      (didLift || didRun ? ' hit' : '') + (r.lift ? ' movable' : '') + '" data-dow="' + i + '"' +
+      (r.lift ? ' data-lift="' + esc(r.lift) + '"' : '') + ' onclick="pickCalDay(' + i + ')">' +
       '<div class="caldow">' + esc(DOW[i].slice(0, 1)) + '</div>' +
       '<div class="calnum num">' + (+iso.slice(8)) + '</div>' +
       '<div class="calmark">' + mark + '</div>' +
       '<div class="callabel">' + esc(shortName(label)) + '</div></div>';
   }).join('') + '</div>';
 
+  h += '<div class="tiny dim" style="margin-top:9px">Drag a session onto another day to move it. Landing on a day that is taken swaps the two.</div>';
   h += '<div class="rowsplit" style="margin-top:11px;align-items:flex-end">' +
     '<div class="tiny dim">' + pct + '% of planned sessions done · ' + S + ' week streak</div>' +
     '<button class="mini" onclick="go(\'plan\')">See the plan</button></div>' +
@@ -7948,7 +7959,7 @@ function dowOfWorkout(name){
 }
 /* Move a session onto a weekday. If something is already there the two trade places, so the
    number of training days never quietly changes underneath the program. */
-function moveWorkoutToDow(name, dow){
+function moveWorkoutToDow(name, dow, reopen){
   const from = dowOfWorkout(name);
   if(from === dow) return;
   const sched = schedEditable();
@@ -7959,7 +7970,8 @@ function moveWorkoutToDow(name, dow){
   sched.lifts[dow] = moving;
   sched.liftDows = Object.keys(sched.lifts).map(Number).sort((a, b)=>a - b);
   state.sched = sched;
-  saveNow(); render(); openManageSchedule();
+  saveNow(); render();
+  if(reopen) openManageSchedule();
   toast(sitting ? name + ' and ' + sitting.name + ' swapped days' : name + ' moved to ' + DOW_FULL[dow]);
 }
 /* Reorder the sequence Trainlog works through. state.plan order is what suggestDayId walks, so
@@ -8005,7 +8017,7 @@ function openManageSchedule(){
     const cur = dowOfWorkout(d.name);
     return '<div class="msrow"><div class="msrowname">' + esc(d.name) + '</div>' +
       '<div class="msdows">' + DOW.map((lab, i)=>
-        '<button class="msdowb' + (i === cur ? ' on' : '') + '" onclick="moveWorkoutToDow(\'' + jsq(d.name) + '\',' + i + ')"' +
+        '<button class="msdowb' + (i === cur ? ' on' : '') + '" onclick="moveWorkoutToDow(\'' + jsq(d.name) + '\',' + i + ',1)"' +
         ' aria-label="Move ' + esc(d.name) + ' to ' + DOW_FULL[i] + '"' + (i === cur ? ' aria-current="true"' : '') + '>' +
         esc(lab[0]) + '</button>').join('') + '</div></div>';
   }).join('');
@@ -9927,23 +9939,96 @@ load();
 
 
   /* ── Real 3D. An anatomical mesh with one named object per muscle group;
-     the day's groups light, the rest stay matte. Model: BodyParts3D, © DBCLS,
-     CC BY-SA 2.1 Japan. three.js arrives on first open and is cached after. ── */
+     the day's groups light, the rest stay matte. The figure is built from primitives in
+     buildBody() below — schematic, not a scan. three.js arrives on first open, cached after. ── */
   let threeP = null;
   function loadThree(){
     if(!threeP) threeP = (async()=>{
       const THREE = await import('three');
-      const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-      return { THREE, GLTFLoader };
+      return { THREE };
     })().catch(e=>{ threeP = null; throw e; });
     return threeP;
   }
-  let glbP = null;
-  function loadGlb(){
-    if(!glbP) glbP = fetch('./muscles.glb')
-      .then(r=>{ if(!r.ok) throw new Error('model ' + r.status); return r.arrayBuffer(); })
-      .catch(e=>{ glbP = null; throw e; });
-    return glbP;
+  /* ── the figure, built rather than downloaded ──────────────────────────────
+     This used to fetch ./muscles.glb, a BodyParts3D scan that was never part of the app —
+     so the 3D view failed on every install and quietly fell back to the flat map. A scan
+     that is not there cannot be recovered, so the figure is assembled from primitives
+     instead: an anatomical mannequin rather than a cadaver, which is what the view is
+     actually for. It ships inside the file, needs no network and no asset, and every
+     muscle mesh carries the same slug the flat map uses, so highlighting, the group
+     chips and the colour-per-group logic all work unchanged.
+
+     Proportions are in metres on a 1.8 m figure, y up, +z forward. */
+  function buildBody(THREE){
+    const root = new THREE.Group();
+    const SEG = 20;
+    const ball = new THREE.SphereGeometry(1, SEG, Math.round(SEG * 0.65));
+
+    /* An ellipsoid. Muscles are these, sitting slightly proud of the form beneath. */
+    const blob = (name, side, x, y, z, sx, sy, sz)=>{
+      const m = new THREE.Mesh(ball, null);
+      m.name = name;
+      m.position.set(side * x, y, z);
+      m.scale.set(sx, sy, sz);
+      root.add(m);
+    };
+    /* A capsule for a limb segment. Rounded ends are what let consecutive segments overlap
+       into something that reads as one leg rather than two floating pills. */
+    const bone = (side, r, len, x, y, z, tilt)=>{
+      const m = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 4, SEG), null);
+      m.name = 'body';
+      m.position.set(side * x, y, z || 0);
+      if(tilt) m.rotation.z = side * tilt;
+      root.add(m);
+    };
+    const both = (fn)=>{ fn(1); fn(-1); };
+
+    /* ── the form: 1.8 m, eight heads, every segment overlapping the next ── */
+    blob('body', 1, 0, 1.715, 0.004, 0.092, 0.112, 0.100);        // head
+    bone(1, 0.042, 0.06, 0, 1.585, 0);                            // neck
+    blob('body', 1, 0, 1.375, 0, 0.152, 0.135, 0.092);            // ribcage
+    blob('body', 1, 0, 1.215, 0, 0.122, 0.105, 0.080);            // waist
+    blob('body', 1, 0, 1.045, 0, 0.138, 0.098, 0.090);            // pelvis
+    both(sd=>{
+      blob('body', sd, 0.148, 1.472, 0, 0.064, 0.062, 0.060);     // shoulder cap
+      bone(sd, 0.048, 0.21, 0.178, 1.322, 0, 0.04);               // upper arm
+      bone(sd, 0.040, 0.20, 0.196, 1.052, 0);                     // forearm
+      blob('body', sd, 0.200, 0.900, 0.006, 0.036, 0.052, 0.026); // hand
+      bone(sd, 0.078, 0.31, 0.088, 0.740, 0);                     // thigh
+      blob('body', sd, 0.090, 0.512, 0, 0.062, 0.052, 0.062);     // knee
+      bone(sd, 0.055, 0.30, 0.092, 0.315, 0);                     // shin
+      blob('body', sd, 0.092, 0.118, 0, 0.050, 0.048, 0.050);     // ankle
+      blob('body', sd, 0.092, 0.048, 0.048, 0.046, 0.038, 0.108); // foot
+    });
+
+    /* ── front ── */
+    both(sd=>{
+      blob('chest', sd, 0.068, 1.400, 0.070, 0.068, 0.052, 0.045);
+      blob('obliques', sd, 0.098, 1.195, 0.040, 0.030, 0.080, 0.042);
+      blob('front-deltoids', sd, 0.160, 1.468, 0.034, 0.050, 0.054, 0.046);
+      blob('side-deltoids', sd, 0.183, 1.472, 0, 0.038, 0.058, 0.055);
+      blob('biceps', sd, 0.178, 1.320, 0.034, 0.036, 0.078, 0.030);
+      blob('forearm', sd, 0.198, 1.060, 0.024, 0.032, 0.085, 0.028);
+      blob('quadriceps', sd, 0.086, 0.760, 0.050, 0.058, 0.150, 0.036);
+      blob('adductor', sd, 0.036, 0.750, 0.006, 0.028, 0.130, 0.046);
+    });
+    blob('abs', 1, 0, 1.195, 0.072, 0.052, 0.092, 0.035);
+
+    /* ── back ── */
+    both(sd=>{
+      blob('trapezius', sd, 0.052, 1.500, -0.028, 0.070, 0.058, 0.044);
+      blob('upper-back', sd, 0.074, 1.380, -0.070, 0.066, 0.070, 0.034);
+      blob('lats', sd, 0.116, 1.270, -0.046, 0.042, 0.100, 0.055);
+      blob('lower-back', sd, 0.044, 1.135, -0.066, 0.044, 0.064, 0.032);
+      blob('rotator-cuff', sd, 0.152, 1.500, -0.020, 0.036, 0.030, 0.034);
+      blob('back-deltoids', sd, 0.160, 1.462, -0.036, 0.048, 0.052, 0.044);
+      blob('triceps', sd, 0.180, 1.318, -0.034, 0.038, 0.082, 0.032);
+      blob('gluteal', sd, 0.076, 0.955, -0.058, 0.066, 0.064, 0.052);
+      blob('hamstring', sd, 0.088, 0.740, -0.048, 0.054, 0.148, 0.036);
+      blob('calves', sd, 0.092, 0.375, -0.034, 0.046, 0.082, 0.036);
+      blob('soleus', sd, 0.091, 0.230, -0.028, 0.036, 0.062, 0.030);
+    });
+    return root;
   }
 
   /* One place builds the scene, used inline on Today and full-screen in the
@@ -9958,11 +10043,9 @@ load();
       try{ if(ro) ro.disconnect(); }catch(e){}
       try{ if(renderer){ renderer.dispose(); renderer.forceContextLoss(); } }catch(e){}
     };
-    let THREE, GLTFLoader, buf;
+    let THREE;
     try{
-      const mod = await loadThree();
-      THREE = mod.THREE; GLTFLoader = mod.GLTFLoader;
-      buf = await loadGlb();
+      THREE = (await loadThree()).THREE;
     }catch(err){ dispose(); throw err; }
     if(stopped || !stage.isConnected){ dispose(); return { dispose, setLit:()=>{} }; }
 
@@ -9982,16 +10065,14 @@ load();
     const key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(2, 3, 4); scene.add(key);
     const rim = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(-3, 1, -3); scene.add(rim);
 
-    const gltf = await new Promise((res, rej)=> new GLTFLoader().parse(buf, '', res, rej));
+    const figure = buildBody(THREE);
     if(stopped || !stage.isConnected){ dispose(); return { dispose, setLit:()=>{} }; }
 
     const group = new THREE.Group();
     let glow = [];
     const parts = [];                      // every mesh with its slug, for re-lighting in place
     const groupName = o=>{ let n = o; while(n){ if(n.name && SLUG_SET.has(n.name)) return n.name; n = n.parent; } return o.name; };
-    /* The model ships POSITION and COLOR_0 only — no NORMAL attribute — so a lit
-       material has no surface data and renders pure black. Compute normals first. */
-    gltf.scene.traverse(o=>{
+    figure.traverse(o=>{
       if(!o.isMesh) return;
       if(o.geometry && !o.geometry.getAttribute('normal')) o.geometry.computeVertexNormals();
       o.material = new THREE.MeshStandardMaterial({ roughness:0.95, metalness:0.02 });
@@ -10017,11 +10098,11 @@ load();
       });
     };
     applyLit(lit);
-    group.add(gltf.scene);
+    group.add(figure);
 
     const box = new THREE.Box3().setFromObject(group);
     const size = box.getSize(new THREE.Vector3()), mid = box.getCenter(new THREE.Vector3());
-    gltf.scene.position.sub(mid);
+    figure.position.sub(mid);
     const pivot = new THREE.Group(); pivot.add(group); scene.add(pivot);
     let dist = 1, baseDist = 1, userZoom = false;
 
@@ -10090,7 +10171,7 @@ load();
         '<button class="icb d3x" aria-label="Close">✕</button></div>' +
       '<div class="d3stage"><div class="d3load">Loading the model…</div></div>' +
       '<div class="d3foot"><span class="tiny dim">Drag to rotate · pinch or scroll to zoom</span>' +
-        '<span class="tiny dim">BodyParts3D, © DBCLS, CC BY-SA 2.1 JP</span></div>';
+        '<span class="tiny dim">Schematic figure · not an anatomical scan</span></div>';
     document.body.appendChild(ov);
     document.body.style.overflow = 'hidden';
 
@@ -10195,6 +10276,75 @@ load();
       document.removeEventListener('pointercancel', up);
       if(ind){ const fire = parseFloat(ind.style.height) > 46; ind.remove();
         if(fire){ render(); if(typeof toast === 'function') toast('Up to date'); } }
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+    document.addEventListener('pointercancel', up);
+  });
+
+  /* ── drag a session onto another day, from the Today calendar ──
+     Moving a workout used to mean opening Plan and finding the schedule sheet. The week is
+     already on the Today screen, so the shortest version of the gesture is to pick the session
+     up and drop it where it should go. Delegated from the document because render() replaces
+     the grid wholesale. Vertical intent is handed straight back to the page so the screen still
+     scrolls normally; only a sideways drag along the strip is claimed as a move. */
+  document.addEventListener('pointerdown', e=>{
+    const cell = e.target.closest && e.target.closest('.calcell[data-lift]');
+    if(!cell) return;
+    const grid = cell.closest('.calgrid'); if(!grid) return;
+    const cells = Array.prototype.slice.call(grid.querySelectorAll('.calcell'));
+    const name = cell.getAttribute('data-lift');
+    const x0 = e.clientX, y0 = e.clientY;
+    let dragging = false, target = null, done = false;
+
+    const clearMarks = ()=> cells.forEach(c=>c.classList.remove('dropinto'));
+    const finish = ()=>{
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      document.removeEventListener('pointercancel', up);
+      cell.classList.remove('dragging');
+      cell.style.transform = '';
+      clearMarks();
+      done = true;
+    };
+    const move = ev=>{
+      if(done) return;
+      const dx = ev.clientX - x0, dy = ev.clientY - y0;
+      if(!dragging){
+        if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        /* a mostly-vertical first move is a scroll, not a drag — let go of it entirely */
+        if(Math.abs(dy) > Math.abs(dx)){ finish(); return; }
+        dragging = true;
+        cell.classList.add('dragging');
+      }
+      cell.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      /* the dragged cell is translated under the cursor, so it would always win a hit test
+         against itself — it is excluded, and the day beneath it is what counts */
+      const over = cells.find(c=>{
+        if(c === cell) return false;
+        const r = c.getBoundingClientRect();
+        return ev.clientX >= r.left && ev.clientX <= r.right &&
+               ev.clientY >= r.top - 30 && ev.clientY <= r.bottom + 30;
+      });
+      clearMarks();
+      target = over || null;
+      if(target) target.classList.add('dropinto');
+    };
+    const up = ev=>{
+      const drop = dragging ? target : null;
+      const wasDragging = dragging;
+      finish();
+      if(ev && ev.type === 'pointercancel') return;
+      if(!wasDragging) return;                    // a tap: leave the click alone
+      /* the drag consumed the gesture, so the browser's follow-up click must not also
+         re-pick the day underneath — same swallow the warm-up swipe uses */
+      const swallow = c=>{ c.stopImmediatePropagation(); c.preventDefault(); };
+      cell.addEventListener('click', swallow, { once:true, capture:true });
+      setTimeout(()=>cell.removeEventListener('click', swallow, true), 350);
+      if(!drop) return;
+      const dow = +drop.getAttribute('data-dow');
+      if(isNaN(dow)) return;
+      try{ moveWorkoutToDow(name, dow); }catch(err){ console.error(err); }
     };
     document.addEventListener('pointermove', move);
     document.addEventListener('pointerup', up);

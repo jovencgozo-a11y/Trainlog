@@ -60,6 +60,11 @@ a program rebuild.
 
 ## Managing the week
 
+On the **Today** tab, drag a session from one day of the week strip onto another to move it;
+dropping it on a day that already has a session swaps the two. A mostly-vertical gesture is
+left to the page so the screen still scrolls, and a plain tap still opens that day.
+
+
 The generated schedule is a starting point. **Plan → Manage schedule** changes two separate
 things: which weekday each session lands on (tap a day; if it is taken, the two sessions swap),
 and the order Trainlog works through sessions, which is what it offers you next when you finish
@@ -78,7 +83,7 @@ are preview scaffolding rather than shipping behavior:
   so the app does not currently install one. Enabling it also requires an `sw.js` next to
   `index.html`, which this repository does not yet contain.
 
-The 3D body map fetches `./muscles.glb` (BodyParts3D, © DBCLS, CC BY-SA 2.1 Japan), which
-is also not in this repository. Both the inline card and the full-screen viewer catch the
-failure and fall back to the flat anatomical map, so the app works without it — drop the
-model next to `index.html` to turn the 3D view on.
+The 3D body map is built from primitives in `buildBody()` — a schematic mannequin, not an
+anatomical scan — so there is no model file to ship and nothing to go missing. It needs
+three.js, which loads from jsDelivr on first open and is cached after; without a connection
+the view falls back to the flat anatomical map as before.
