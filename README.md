@@ -58,6 +58,14 @@ rules actually are:
 Progression history reads the archive as well as the current block, so earned weight survives
 a program rebuild.
 
+## Managing the week
+
+The generated schedule is a starting point. **Plan → Manage schedule** changes two separate
+things: which weekday each session lands on (tap a day; if it is taken, the two sessions swap),
+and the order Trainlog works through sessions, which is what it offers you next when you finish
+one. Editing either leaves everything logged untouched, and "Reset to suggested" puts the
+generated week back.
+
 ## Notes on this snapshot
 
 This is the v191 preview build with the progression-audit fixes applied. Two things in it

@@ -1928,6 +1928,35 @@ x}
 .progline.regress .progtag{font-weight:600;background:color-mix(in srgb,#c2621c 16%,transparent);color:#c2621c}
 .progline.regress .proglvl{background:#c2621c;color:#fff}
 .progline.hold .progtag{background:color-mix(in srgb,var(--color-text) 10%,transparent);color:var(--color-text);opacity:.82}
+
+/* ── manage schedule ── */
+.msweek{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:9px}
+.msday{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:9px;
+  background:color-mix(in srgb,var(--color-text) 5%,transparent);text-align:center;min-width:0}
+.msday.on{background:color-mix(in srgb,var(--color-accent) 14%,transparent)}
+.msdow{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--color-text) 55%,transparent)}
+.msname{font-size:10px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;max-width:100%;color:var(--color-text)}
+.msday.on .msname{color:var(--color-accent)}
+.msrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--color-divider)}
+.msrow:last-of-type{border-bottom:0}
+.msrow.ord{gap:8px}
+.msrowname{font-size:13.5px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msrow:not(.ord){flex-direction:column;align-items:stretch;gap:7px}
+.msdows{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.msdowb{font:inherit;font-size:12px;font-weight:600;padding:9px 0;border-radius:8px;cursor:pointer;
+  border:1px solid var(--color-divider);background:transparent;color:var(--color-text);
+  transition:background .15s ease,border-color .15s ease,color .15s ease}
+.msdowb:hover{border-color:color-mix(in srgb,var(--color-accent) 45%,transparent)}
+.msdowb.on{background:var(--color-accent);border-color:var(--color-accent);color:#0f1a15}
+.msno{width:20px;flex:none;font-size:12px;
+  color:color-mix(in srgb,var(--color-text) 50%,transparent)}
+.msarrow{font:inherit;font-size:15px;line-height:1;width:34px;height:34px;flex:none;border-radius:9px;
+  cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)}
+.msarrow[disabled]{opacity:.3;cursor:default}
+.msarrow:not([disabled]):hover{border-color:color-mix(in srgb,var(--color-accent) 45%,transparent)}
+.msdowb:focus-visible,.msarrow:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
 .proglvl{font:inherit;font-size:.85rem;font-weight:600;border:0;border-radius:8px;padding:6px 13px;background:var(--color-accent);color:#12131a;cursor:pointer}
 .proglvl:active{transform:scale(.96)}
 
@@ -1951,6 +1980,30 @@ html.theme-dark{
   --shadow-sm:0 1px 2px rgba(0,0,0,.45),0 10px 30px rgba(0,0,0,.55);
 }
 html.theme-dark, html.theme-dark body{ background:var(--color-bg); color:var(--color-text); }
+/* Surfaces that paint a literal light colour instead of reading a token. Flipping the ramps
+   left these four behind: the day's hero card and the rank card kept their white gradients, and
+   the top bar kept its white frost, so in the dark near-white text sat on a near-white card and
+   the workout day and the Progress hero were both invisible. Each one now takes the same shape
+   it has in the light, mixed over the dark ground. */
+html.theme-dark .hero{
+  background:
+    radial-gradient(130% 140% at 0% 0%, color-mix(in srgb,var(--q) 26%,transparent) 0%, transparent 64%),
+    linear-gradient(168deg,#232a38,#1a1f29 74%);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--q) 40%,transparent), var(--shadow-md);
+}
+html.theme-dark .rankcard{
+  background:
+    radial-gradient(125% 135% at 0% 0%, color-mix(in srgb,var(--medal) 28%,transparent) 0%, transparent 64%),
+    linear-gradient(168deg,#232a38,#1a1f29 74%);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--medal) 44%,transparent), var(--shadow-md);
+}
+html.theme-dark .top{
+  background:color-mix(in srgb,var(--color-bg) 82%,transparent);
+  border-bottom-color:var(--color-divider);
+}
+html.theme-dark .medaldot{
+  box-shadow:0 0 0 3px var(--color-surface), 0 0 0 4px color-mix(in srgb,var(--medal) 48%,transparent);
+}
 </style>
 </head>
 <body>
@@ -5421,10 +5474,33 @@ const EFFORT_WORD = { recovery:'very easy', easy:'conversational', easy2:'conver
   tempo:'comfortably hard', racepace:'goal race effort', vo2:'hard but repeatable', speed:'fast, near flat out',
   strides:'near top speed', hills:'hard up, jog down' };
 function parsePace(str){
-  const m = String(str).trim().match(/^(\d{1,2})[:.](\d{1,2})$/);
-  if(m) return Math.max(180, Math.min(1800, (+m[1])*60 + (+m[2])));
-  const n = parseFloat(str);
-  return isNaN(n) ? 0 : Math.max(180, Math.min(1800, Math.round(n*60)));
+  const clamp = v => Math.max(180, Math.min(1800, v));
+  const t = String(str).trim();
+  const m = t.match(/^(\d{1,2})[:.](\d{1,2})$/);
+  if(m) return clamp((+m[1])*60 + (+m[2]));
+  /* Bare digits are minutes and seconds, not decimal minutes. A phone's numeric keypad has no
+     colon key, so "930" is how a pace actually gets typed — and reading it as 930 decimal
+     minutes clamped it to 30:00, which is why the field appeared to eat the colon and come
+     back with a nonsense pace. The last two digits are always the seconds. */
+  const d = t.replace(/\D/g, '');
+  if(/^\d{3,4}$/.test(d)) return clamp((+d.slice(0, -2))*60 + (+d.slice(-2)));
+  if(/^\d{1,2}$/.test(d)) return clamp((+d)*60);
+  const n = parseFloat(t);
+  return isNaN(n) ? 0 : clamp(Math.round(n*60));
+}
+/* The field writes its own colon as you type, so nobody has to find one on a number pad. */
+function paceMask(el){
+  const d = String(el.value).replace(/\D/g, '').slice(0, 4);
+  el.value = d.length <= 2 ? d : d.slice(0, d.length - 2) + ':' + d.slice(-2);
+  try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+}
+/* Commit on blur or Enter. An unreadable entry falls back to what was there rather than to
+   zero, so a stray keystroke never silently wipes a pace that was already set. */
+function commitPace(el){
+  const secs = parsePace(el.value);
+  if(!secs){ el.value = setup.runPace ? fmtSec(setup.runPace) : ''; return; }
+  setup.runPace = secs; state.runPace = secs;
+  render();
 }
 function fmtSec(s){ return Math.floor(s/60) + ':' + String(Math.round(s%60)).padStart(2,'0'); }
 function paceFor(type, goalKey){
@@ -6179,10 +6255,13 @@ const STEPS = [
         <button class="chip ${setup.runPace?'':'on'}" onclick="setRunPace('')">Not sure yet</button>
       </div>
       ${setup.runPace ? `<div style="display:flex;gap:10px;align-items:center;margin-top:12px">
-          <input id="paceinput" type="text" inputmode="numeric" placeholder="9:30" value="${fmtSec(setup.runPace)}"
-            onchange="setRunPace(this.value)" onkeydown="if(event.key==='Enter')this.blur()"
+          <input id="paceinput" type="text" inputmode="numeric" enterkeyhint="done" placeholder="9:30"
+            value="${fmtSec(setup.runPace)}" aria-label="Easy pace, minutes per mile"
+            oninput="paceMask(this)" onblur="commitPace(this)"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
             style="flex:none;width:104px;text-align:center;font-family:var(--font-heading);font-size:20px">
-          <span class="tiny muted">min per mile, talking pace</span></div>`
+          <span class="tiny muted">min per mile, talking pace</span></div>
+        <div class="tiny dim" style="margin-top:8px">Just type the digits — <b>930</b> becomes 9:30. No colon needed.</div>`
         : `<div class="tiny muted" style="margin-top:10px">Fine — sessions run on feel until you log or track a run, then Trainlog works your paces out and fills them in.</div>`}</div>`;
 
     if(setup.runDays > 0){
@@ -7837,6 +7916,118 @@ function pickCalDay(i){
 }
 function pickDay(id){ ui.dayId = id; ui.dayPicked = true; saveNow(); render(); }
 
+/* ══════════ MANAGE SCHEDULE ══════════
+   A generated week is a starting point, not a contract. Life moves sessions around — a day gets
+   missed, a gym is shut, a Saturday fills up — and until now the only way to change which
+   session fell on which day was to rebuild the whole program, which files the current one away
+   and throws out the arrangement you were happy with.
+
+   Two different things can be changed here, and they are kept apart on purpose because they
+   drive different parts of the app:
+     · WHICH DAY a session lands on — the weekly calendar, the Plan grid, the Today card.
+     · WHAT ORDER sessions run in — what Trainlog offers you next when you finish one, which is
+       sequence-based and deliberately survives a missed day rather than skipping it.
+   Editing either leaves everything logged untouched. */
+const DOW_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+/* A writable copy of the live schedule. schedNow() may hand back a generated object that was
+   never stored, so anything that edits it has to persist a real one. */
+function schedEditable(){
+  const s = schedNow();
+  return {
+    liftDows:(s.liftDows || []).slice(),
+    lifts:Object.assign({}, s.lifts || {}),
+    runs:Object.assign({}, s.runs || {}),
+    goal:s.goal, nLift:s.nLift, startDow:s.startDow || 0, custom:true
+  };
+}
+function dowOfWorkout(name){
+  const s = schedNow();
+  const k = Object.keys(s.lifts || {}).find(d=> s.lifts[d] && s.lifts[d].name === name);
+  return k === undefined ? -1 : +k;
+}
+/* Move a session onto a weekday. If something is already there the two trade places, so the
+   number of training days never quietly changes underneath the program. */
+function moveWorkoutToDow(name, dow){
+  const from = dowOfWorkout(name);
+  if(from === dow) return;
+  const sched = schedEditable();
+  const moving = sched.lifts[from];
+  if(!moving) return;
+  const sitting = sched.lifts[dow] || null;
+  if(sitting) sched.lifts[from] = sitting; else delete sched.lifts[from];
+  sched.lifts[dow] = moving;
+  sched.liftDows = Object.keys(sched.lifts).map(Number).sort((a, b)=>a - b);
+  state.sched = sched;
+  saveNow(); render(); openManageSchedule();
+  toast(sitting ? name + ' and ' + sitting.name + ' swapped days' : name + ' moved to ' + DOW_FULL[dow]);
+}
+/* Reorder the sequence Trainlog works through. state.plan order is what suggestDayId walks, so
+   this is the lever for "I missed Monday — do that one next" without touching the calendar. */
+function moveDayOrder(id, delta){
+  const i = state.plan.findIndex(d=>d.id === id);
+  const j = i + delta;
+  if(i < 0 || j < 0 || j >= state.plan.length) return;
+  const row = state.plan.splice(i, 1)[0];
+  state.plan.splice(j, 0, row);
+  state.plan.forEach((d, k)=>{ d.dayIdx = k; });
+  saveNow(); render(); openManageSchedule();
+  toast(row.name + ' moved to position ' + (j + 1));
+}
+async function resetSchedule(){
+  if(!await askConfirm('Put the week back to the schedule Trainlog suggested? Your sessions and everything logged stay exactly as they are.')) return;
+  const names = state.plan.map(d=>d.name);
+  state.sched = buildSchedule(names, state.runVisible ? (setup.runDays || 0) : 0,
+    state.runGoal || setup.runGoal, startDow(), trainDows());
+  await save(); render(); openManageSchedule();
+  toast('Week reset to the suggested schedule');
+}
+function openManageSchedule(){
+  closeSheets();
+  if(!state.plan.length) return;
+  const s = schedNow();
+  const rows = weekRows(state.week);
+
+  let h = '<h4>Manage schedule</h4>' +
+    '<p class="sub" style="margin:6px 0 16px;line-height:1.55">Move a session to a different day, or change the order Trainlog works through them. Nothing you have logged is affected.</p>';
+
+  /* the week as it stands, so a change can be seen against the whole shape of it */
+  h += '<div class="kicker">Your week now</div><div class="msweek">' +
+    rows.map(r=>'<div class="msday' + (r.lift ? ' on' : '') + '">' +
+      '<span class="msdow">' + esc(r.label) + '</span>' +
+      '<span class="msname">' + (r.lift ? esc(shortName(r.lift)) : r.run ? 'Run' : 'Rest') + '</span>' +
+      '</div>').join('') + '</div>';
+
+  h += '<div class="rule" style="margin:16px 0 14px"></div>';
+  h += '<div class="kicker">Which day each session lands on</div>' +
+    '<p class="tiny dim" style="margin:5px 0 12px;line-height:1.5">Tap a day to move that session there. If the day is already taken, the two swap.</p>';
+  h += state.plan.map(d=>{
+    const cur = dowOfWorkout(d.name);
+    return '<div class="msrow"><div class="msrowname">' + esc(d.name) + '</div>' +
+      '<div class="msdows">' + DOW.map((lab, i)=>
+        '<button class="msdowb' + (i === cur ? ' on' : '') + '" onclick="moveWorkoutToDow(\'' + jsq(d.name) + '\',' + i + ')"' +
+        ' aria-label="Move ' + esc(d.name) + ' to ' + DOW_FULL[i] + '"' + (i === cur ? ' aria-current="true"' : '') + '>' +
+        esc(lab[0]) + '</button>').join('') + '</div></div>';
+  }).join('');
+
+  h += '<div class="rule" style="margin:16px 0 14px"></div>';
+  h += '<div class="kicker">What comes next</div>' +
+    '<p class="tiny dim" style="margin:5px 0 12px;line-height:1.5">When you finish a session, Trainlog offers the next one in this order — so a missed day is picked up rather than skipped.</p>';
+  h += state.plan.map((d, i)=>
+    '<div class="msrow ord"><span class="msno num">' + (i + 1) + '</span>' +
+    '<div class="msrowname" style="flex:1">' + esc(d.name) + '</div>' +
+    '<button class="msarrow" onclick="moveDayOrder(' + d.id + ',-1)"' + (i === 0 ? ' disabled' : '') +
+      ' aria-label="Move ' + esc(d.name) + ' earlier">\u2191</button>' +
+    '<button class="msarrow" onclick="moveDayOrder(' + d.id + ',1)"' + (i === state.plan.length - 1 ? ' disabled' : '') +
+      ' aria-label="Move ' + esc(d.name) + ' later">\u2193</button></div>').join('');
+
+  h += '<div class="brow" style="margin-top:18px">' +
+    '<button class="b pri" onclick="closeSheets()">Done</button>' +
+    '<button class="b quiet" onclick="resetSchedule()">Reset to suggested</button></div>';
+  if(s.custom) h += '<p class="tiny dim" style="margin-top:10px">This week is arranged by you. Building a new program starts from a fresh suggested schedule.</p>';
+  sheet(h);
+}
+
 /* Plan reads top to bottom the way a training week is actually held in the head: what am I
    doing each day, then what exactly does each of those sessions ask for. The week grid comes
    first — Monday through Sunday, lifts and runs together, so a rest day and a double day are
@@ -7876,7 +8067,8 @@ function viewPlan(){
   const runGoalLabel = (RUN_GOALS[state.runGoal] || {}).label || '';
   h += '<div class="panel calpanel"><div class="rowsplit">' +
     '<div class="kicker">Your training week</div>' +
-    (runGoalLabel ? '<div class="tiny dim">' + esc(runGoalLabel) + '</div>' : '') + '</div>' +
+    '<button class="mini" onclick="openManageSchedule()">Manage schedule</button></div>' +
+    (runGoalLabel ? '<div class="tiny dim" style="margin-top:2px">' + esc(runGoalLabel) + '</div>' : '') +
     '<div class="wkgrid">' + rows.map(r=>{
       const d = r.lift ? state.plan.find(x=>x.name === r.lift) : null;
       const rest = !r.lift && !r.run;
