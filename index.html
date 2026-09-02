@@ -9949,6 +9949,32 @@ load();
     })().catch(e=>{ threeP = null; throw e; });
     return threeP;
   }
+  let loaderP = null;
+  function loadGltfLoader(){
+    if(!loaderP) loaderP = import('three/addons/loaders/GLTFLoader.js')
+      .then(m=>m.GLTFLoader).catch(e=>{ loaderP = null; throw e; });
+    return loaderP;
+  }
+  /* The anatomical scan, when it is installed. muscles.glb is not committed to this
+     repository — it is dropped in next to index.html — so the fetch is allowed to fail and
+     the schematic figure below stands in. What must never happen again is the app ignoring
+     a model that IS there: this path is tried first, every time. */
+  let glbP = null, glbAbsent = false;
+  function loadGlb(){
+    /* A 404 means the scan simply is not installed here — remember that, so opening the body
+       map a dozen times does not fire a dozen doomed requests. A network error is different:
+       the file may exist and the connection dropped, so that stays retryable. */
+    if(glbAbsent) return Promise.reject(new Error('model not installed'));
+    if(!glbP) glbP = fetch('./muscles.glb')
+      .then(r=>{
+        if(!r.ok){ if(r.status === 404) glbAbsent = true; throw new Error('model ' + r.status); }
+        return r.arrayBuffer();
+      })
+      .catch(e=>{ glbP = null; throw e; });
+    return glbP;
+  }
+  /* Which figure the viewer ended up with, so the credit line can be honest about it. */
+  let modelSource = null;
   /* ── the figure, built rather than downloaded ──────────────────────────────
      This used to fetch ./muscles.glb, a BodyParts3D scan that was never part of the app —
      so the 3D view failed on every install and quietly fell back to the flat map. A scan
@@ -10043,10 +10069,15 @@ load();
       try{ if(ro) ro.disconnect(); }catch(e){}
       try{ if(renderer){ renderer.dispose(); renderer.forceContextLoss(); } }catch(e){}
     };
-    let THREE;
+    let THREE, scanBuf = null, GLTFLoader = null;
     try{
       THREE = (await loadThree()).THREE;
     }catch(err){ dispose(); throw err; }
+    /* Prefer the real scan wherever it is installed; fall back only when it is not. */
+    try{
+      scanBuf = await loadGlb();
+      GLTFLoader = await loadGltfLoader();
+    }catch(e){ scanBuf = null; GLTFLoader = null; }
     if(stopped || !stage.isConnected){ dispose(); return { dispose, setLit:()=>{} }; }
 
     const css = n => getComputedStyle(document.body).getPropertyValue(n).trim();
@@ -10065,13 +10096,22 @@ load();
     const key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(2, 3, 4); scene.add(key);
     const rim = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(-3, 1, -3); scene.add(rim);
 
-    const figure = buildBody(THREE);
+    let figure;
+    if(scanBuf && GLTFLoader){
+      try{
+        const gltf = await new Promise((res, rej)=> new GLTFLoader().parse(scanBuf, '', res, rej));
+        figure = gltf.scene; modelSource = 'scan';
+      }catch(e){ figure = null; }
+    }
+    if(!figure){ figure = buildBody(THREE); modelSource = 'schematic'; }
     if(stopped || !stage.isConnected){ dispose(); return { dispose, setLit:()=>{} }; }
 
     const group = new THREE.Group();
     let glow = [];
     const parts = [];                      // every mesh with its slug, for re-lighting in place
     const groupName = o=>{ let n = o; while(n){ if(n.name && SLUG_SET.has(n.name)) return n.name; n = n.parent; } return o.name; };
+    /* The scan ships POSITION and COLOR_0 only — no NORMAL attribute — so a lit material has
+       no surface data and renders pure black. Compute normals first. */
     figure.traverse(o=>{
       if(!o.isMesh) return;
       if(o.geometry && !o.geometry.getAttribute('normal')) o.geometry.computeVertexNormals();
@@ -10171,7 +10211,7 @@ load();
         '<button class="icb d3x" aria-label="Close">✕</button></div>' +
       '<div class="d3stage"><div class="d3load">Loading the model…</div></div>' +
       '<div class="d3foot"><span class="tiny dim">Drag to rotate · pinch or scroll to zoom</span>' +
-        '<span class="tiny dim">Schematic figure · not an anatomical scan</span></div>';
+        '<span class="tiny dim d3credit">\u00a0</span></div>';
     document.body.appendChild(ov);
     document.body.style.overflow = 'hidden';
 
@@ -10189,6 +10229,12 @@ load();
     try{
       const hnd = await mountModel(stage, lit, { pad:1.08 });
       if(gone) hnd.dispose(); else dispose = hnd.dispose;
+      /* Credit whatever is actually on screen — the scan when it is installed, and an honest
+         note that this is a stand-in when it is not. */
+      const cr = ov.querySelector('.d3credit');
+      if(cr) cr.textContent = modelSource === 'scan'
+        ? 'BodyParts3D, \u00a9 DBCLS, CC BY-SA 2.1 JP'
+        : 'Stand-in figure \u2014 add muscles.glb for the anatomical model';
     }catch(err){
       stage.innerHTML = '<div class="d3load">Could not load the 3D model.' +
         '<span class="tiny dim" style="display:block;margin-top:6px">It needs a connection the first time. The flat map still works.</span></div>';

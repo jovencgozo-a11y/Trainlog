@@ -83,7 +83,9 @@ are preview scaffolding rather than shipping behavior:
   so the app does not currently install one. Enabling it also requires an `sw.js` next to
   `index.html`, which this repository does not yet contain.
 
-The 3D body map is built from primitives in `buildBody()` — a schematic mannequin, not an
-anatomical scan — so there is no model file to ship and nothing to go missing. It needs
-three.js, which loads from jsDelivr on first open and is cached after; without a connection
-the view falls back to the flat anatomical map as before.
+The 3D body map uses `./muscles.glb` (BodyParts3D, © DBCLS, CC BY-SA 2.1 Japan) whenever that
+file sits next to `index.html`. The model is not committed here, so if it is missing the view
+falls back to a schematic figure built from primitives in `buildBody()` and says so on screen —
+drop `muscles.glb` in and the anatomical model comes straight back, no code change. Either way
+it needs three.js, which loads from jsDelivr on first open and is cached after; with no
+connection at all the card falls back to the flat anatomical map as before.
