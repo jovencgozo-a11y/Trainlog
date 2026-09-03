@@ -108,11 +108,19 @@ number: the app can always explain the weight it is asking for.
 
 ## What is NOT in here
 
-Program generation, scheduling, readiness and scoring are now DOM-free and
-covered by `systems-golden.json`, but they still read the app's global `state`
-and `setup` rather than taking them as arguments — so they can be tested and
-reasoned about in place, but not yet imported standalone. That parameterisation
-is the remaining work before they can travel.
+Program generation, scheduling, readiness and scoring are DOM-free, covered by
+`systems-golden.json`, and now take their inputs through an explicit context
+object — `rdCtx`, `scCtx`, `schCtx`, `pgCtx`. Omitting it falls back to the live
+globals, which is what every existing call site does, so behaviour is unchanged;
+passing one drives the system with no global reads at all. Verified by emptying
+`state` and `setup` and running all four purely from injected context.
+
+The one remaining coupling is that `composeProgram` still *writes* its result
+into `state` (plan, seed, weeks, sched and the rest). That is deliberate:
+`buildDay`, `pickForSlot` and `buildStagesFor` read `state.seed` and
+`state.weeks` back mid-build, so returning a plain object instead changes which
+program comes out. Returning rather than writing is the last step, and it needs
+those three reads parameterised first.
 
 The muscle-map slug tables stay behind: they are coupled to the SVG and the 3D
 figure.

@@ -2618,9 +2618,9 @@ function loadKindOf(m){
    governs every percentage in the program, and it goes stale the moment the lifter gets
    stronger. The best set ever recorded for a movement — across the current block and every
    archived one — is turned into an estimated 1RM, so the number tracks training on its own. */
-function maxOf(exName){
+function maxOf(exName, ctx){
   let est = 0;
-  try{ est = bestOfAll(exName) || 0; }catch(e){ est = 0; }
+  try{ est = bestOfAll(exName, ctx) || 0; }catch(e){ est = 0; }
   return Math.round(est);
 }
 /* The set the estimate came from, so the number is always attributable. */
@@ -2867,7 +2867,8 @@ function guardPrimaries(list){
 const stageLen = () => (weekCount() <= 4 ? 1 : 2);
 const stageCount = () => Math.min(6, Math.ceil(weekCount() / stageLen()));
 const stageOf = week => Math.floor((Math.max(1, week || 1) - 1) / stageLen());
-function buildStagesFor(d, seedBase){
+function buildStagesFor(d, seedBase, ctx){
+  const _s = pgCtx(ctx);
   /* Stages are derived from the stored list, which already holds the finisher appended last
      time — so a new one accumulated on every version bump, and a bodyweight mobility drill
      could be left carrying a stale burnout flag beside its own working-set target. Clear both
@@ -2895,10 +2896,10 @@ function buildStagesFor(d, seedBase){
     });
     const pool = BANK.filter(x=>
       !have.has(x.n) && !isBandMove(x) && equipPick(x).include && !patterns.has(x.p) &&
-      !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
+      !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
       /* The technical ceiling applies here too. Topping a short day back up ignored it, which is
          how a beginner was handed an archer push-up. */
-      (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
+      (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
       (x.g || []).some(g=>regions.has(g)))
       .sort((a, b)=>{
         const fresh = y => (y.g || []).some(g=>regions.has(g) && !isolated.has(g)) ? 0 : 1;
@@ -2965,11 +2966,11 @@ function buildStagesFor(d, seedBase){
   };
   const progressionChain = (m, primary)=>{
     if(!m) return [];
-    const gate = k => (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(k || 2) - 1] > -50;
+    const gate = k => (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(k || 2) - 1] > -50;
     const groups = m.g || [];
     const usable = x =>
       equipPick(x).include &&
-      !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
+      !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
       !isBandMove(x) && gate(x.skill) &&
       loadKindOf(x) === loadKindOf(m) &&
       (x.g || []).some(g=>groups.indexOf(g) > -1) &&
@@ -4320,7 +4321,8 @@ function sessionFloor(){
    rule, so a day that came out at 35 minutes was left there — and a beginner's lower set counts
    made that the normal outcome. Fill up to 50 minutes first from the muscle groups the day
    already trains, keeping every selection rule intact, then trim if the result overshoots. */
-function fillDayToTime(exercises, week, dayIdx){
+function fillDayToTime(exercises, week, dayIdx, ctx){
+  const _s = pgCtx(ctx);
   const day = { exercises:exercises.slice() };
   if(dayMinutes(day, week) >= sessionFloor()) return day.exercises;
   const have = new Set(day.exercises.map(x=>x.name));
@@ -4338,8 +4340,8 @@ function fillDayToTime(exercises, week, dayIdx){
   const dayIsUpper = dayFams.has('upper') && !dayFams.has('lower');
   const pool = BANK.filter(x=>
     !have.has(x.n) && !patterns.has(x.p) && !isBandMove(x) && equipPick(x).include &&
-    !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
-    (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
+    !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
+    (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
     (x.g || []).some(g=>regions.has(g)) &&
     !((dayIsLower && famOf((x.g || [])[0]) === 'upper') || (dayIsUpper && famOf((x.g || [])[0]) === 'lower')))
     .sort((a, b)=> (b.tier || 2) - (a.tier || 2));      // accessories first — the compounds are done
@@ -4349,7 +4351,7 @@ function fillDayToTime(exercises, week, dayIdx){
     if(have.has(m.n) || patterns.has(m.p)) continue;
     have.add(m.n); patterns.add(m.p);
     const gk = goalForTier(m.tier, m.p);
-    const cap = setup.exp === 'beginner' ? 3 : setup.exp === 'advanced' ? 5 : 4;
+    const cap = _s.exp === 'beginner' ? 3 : _s.exp === 'advanced' ? 5 : 4;
     day.exercises.push({ name:m.n, note:m.note, goal:gk,
       targets:genTargets(Math.min(cap, 3), gk, weekCount(), m.p, m.tier, dayIdx || 0, 0, loadKindOf(m), m.n) });
   }
@@ -4357,7 +4359,7 @@ function fillDayToTime(exercises, week, dayIdx){
      work rather than leaving the session under length. */
   let guard1 = 0;
   while(dayMinutes(day, week) < sessionFloor() && guard1++ < 10){
-    const cap = setup.exp === 'beginner' ? 3 : setup.exp === 'advanced' ? 5 : 4;
+    const cap = _s.exp === 'beginner' ? 3 : _s.exp === 'advanced' ? 5 : 4;
     const i = day.exercises.findIndex(ex=>{
       const m = byName[ex.name];
       const n = +(String(tgt(ex, week)).match(/^(\d+)/) || [0, 0])[1];
@@ -4581,7 +4583,8 @@ function ladderFams(names){
   names.forEach(n=>{ const l = ladderOf(n); if(l) s.add(l.fam); });
   return s;
 }
-function pickForSlot(slot, seed, taken, used, wanted, primary){
+function pickForSlot(slot, seed, taken, used, wanted, primary, ctx){
+  const _s = pgCtx(ctx);
   const pats = slot.split('|');
   const pref = blendedTierPref();
   const goals = goalsNow();
@@ -4589,13 +4592,13 @@ function pickForSlot(slot, seed, taken, used, wanted, primary){
      line: a beginner's preferences reward simple, easy-to-learn movements so heavily that a
      tier-2 accessory press outscored every real press and opened the day. So when a genuine
      compound IS available for this slot, the slot only considers compounds. */
-  const skillOK = m => (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(m.skill || 2) - 1] > -50;
+  const skillOK = m => (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(m.skill || 2) - 1] > -50;
   /* A rung whose ladder is already represented in this session is not an option. */
   const fams = ladderFams([...taken]);
   const ladderFree = m => { const l = ladderOf(m.n); return !l || !fams.has(l.fam); };
   const usableHere = m =>
     pats.indexOf(m.p) > -1 && !taken.has(m.n) && ladderFree(m) &&
-    equipPick(m).include && !m.x.some(k=>setup.injuries.includes(k));
+    equipPick(m).include && !m.x.some(k=>_s.injuries.includes(k));
   /* The technical ceiling is a hard line whenever the slot has any option below it. It was only a
      scoring penalty, and a penalty can be outvoted — which is how a beginner was given a
      single-leg RDL with a trap-bar deadlift sitting available on the same pattern. It stays a
@@ -4617,8 +4620,8 @@ function pickForSlot(slot, seed, taken, used, wanted, primary){
     if(refuseBand && isBandMove(m)) return;
     if(taken.has(m.n)) return;
     if(!equipPick(m).include) return;
-    if(m.x.some(k=>setup.injuries.includes(k))) return;
-    const sk = (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(m.skill||2)-1];
+    if(m.x.some(k=>_s.injuries.includes(k))) return;
+    const sk = (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(m.skill||2)-1];
     if(sk < -50) return;                       // too technical for this experience level
     let s = pref[m.tier-1] + sk * 1.15;
     if(primary && !primaryOk(m) && hasLoadable()) s -= 6;
@@ -4684,7 +4687,8 @@ function reSets(ex, dayIdx, sets, stageIdx){
   const t = genTargets(sets, gk, weekCount(), m.p, m.tier, dayIdx || 0, stageIdx || 0, loadKindOf(m), m.n);
   return (t && t.length) ? Object.assign({}, ex, { targets:t }) : ex;
 }
-function governVolume(plan){
+function governVolume(plan, ctx){
+  const _s = pgCtx(ctx);
   const base = WEEK_CAP[primaryGoal()] || 22;
   /* A focused muscle is meant to be over-reached — that is what choosing a focus asks for — so it
      gets a deliberate allowance above the general ceiling rather than being trimmed back to it.
@@ -4788,7 +4792,7 @@ function governVolume(plan){
          weekly volume than a muscle can use, and the governor had to stop cutting exactly where it
          still mattered. Training a muscle three times a week means less each time — that is the
          trade frequency buys, and it only works if the sessions are allowed to be smaller. */
-      const minMoves = (setup.liftDays || 3) >= 5 ? 3 : 5;
+      const minMoves = (_s.liftDays || 3) >= 5 ? 3 : 5;
       const cut = cur.filter(o=>o.cr[over] && (o.m.tier || 2) >= 3 &&
           o.list.length > minMoves && !soleFor((o.m.g || [])[0]))
         .sort((a, b)=> (b.dm[over] - a.dm[over]) || (b.ix - a.ix));
@@ -4889,7 +4893,8 @@ function fillDeficiencies(plan){
   }
   return plan;
 }
-function buildDay(dayKey, dayIndex, used){
+function buildDay(dayKey, dayIndex, used, ctx){
+  const _s = pgCtx(ctx);
   const tpl = DAYS[dayKey];
   if(!tpl) return [];
   // repeating the same day shape (full body ×4) should reuse the big lifts, not exhaust the bank
@@ -4911,14 +4916,14 @@ function buildDay(dayKey, dayIndex, used){
        recovers from it more slowly, so four or five sets of a bench press is volume they cannot
        use — the NSCA gives an untrained lifter one to three sets per exercise, and only advanced
        lifters the upper end. The focus bonus is capped inside the same ceiling. */
-    const cap = setup.exp === 'beginner' ? 3 : setup.exp === 'advanced' ? 5 : 4;
+    const cap = _s.exp === 'beginner' ? 3 : _s.exp === 'advanced' ? 5 : 4;
     /* Experience does NOT buy more sets. Raising the advanced base to five pushed weekly volume
        past the recovery ceiling, so the governor trimmed it back — and because it trims the least
        compound work first, what came out was three main lifts at three sets and one at five:
        less work on the main lifts than an intermediate got, arranged incoherently. The ceiling is
        the binding constraint, so experience has to show up somewhere the ceiling does not govern —
        the technical difficulty of the movements, and how close to failure the sets are taken. */
-    let sets = Math.min(cap, m.tier === 1 ? (setup.exp === 'beginner' ? 3 : 4) : 3);
+    let sets = Math.min(cap, m.tier === 1 ? (_s.exp === 'beginner' ? 3 : 4) : 3);
     if(m.g.some(g=>wanted.has(g))) sets = Math.min(cap, sets + 1);
     out.push(Object.assign({}, m, {sets}));
   });
@@ -4928,8 +4933,8 @@ function buildDay(dayKey, dayIndex, used){
     BANK.forEach(m=>{
       if(out.length >= Math.min(6, tpl.slots.length)) return;
       if(taken.has(m.n) || !equipPick(m).include) return;
-      if(m.x.some(k=>setup.injuries.includes(k))) return;
-      if((SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(m.skill||2)-1] < -50) return;
+      if(m.x.some(k=>_s.injuries.includes(k))) return;
+      if((SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(m.skill||2)-1] < -50) return;
       if(!m.g.some(g=>regions.has(g))) return;
       if(dupOf(out, m.n)) return;
       const l = ladderOf(m.n);
@@ -4944,6 +4949,12 @@ function buildDay(dayKey, dayIndex, used){
   const demand = m => /^plyo/.test(m.p || '') ? 0 : (m.p === 'oly' ? 1 : 2);
   return out.sort((a, b)=> demand(a) - demand(b));
 }
+/* ── program generation ──
+   Explicit context, defaulting to the live setup, matching readiness/scoring/scheduling.
+   The mid-function writes to state.seed and state.weeks inside composeProgram are deliberately
+   left alone: buildDay, pickForSlot and buildStagesFor read them back, so moving them changes
+   which program is produced. ctx: { exp, injuries, kit, emphasis, liftDays, weeks, ... } */
+function pgCtx(c){ return c || setup; }
 function splitFor(nLift){
   const pg = primaryGoal();
   const s = splitStyle();
@@ -4968,14 +4979,15 @@ function dayNames(keys){
     return count[base] > 1 ? base+' '+String.fromCharCode(64+count[base]) : base;
   });
 }
-function adaptationNotes(){
+function adaptationNotes(ctx){
+  const _s = pgCtx(ctx);
   const out = [];
-  if(setup.emphasis.length) out.push('Emphasis on '+setup.emphasis.map(g=>GROUPS[g].label.toLowerCase()).join(' and ')+' — an extra set wherever those movements appear.');
-  setup.injuries.forEach(k=> out.push(INJURIES[k].label+': '+INJURIES[k].note));
-  const off = KIT_KEYS.filter(k=>!setup.kit[k]).map(k=>KIT[k].label.toLowerCase());
+  if(_s.emphasis.length) out.push('Emphasis on '+_s.emphasis.map(g=>GROUPS[g].label.toLowerCase()).join(' and ')+' — an extra set wherever those movements appear.');
+  _s.injuries.forEach(k=> out.push(INJURIES[k].label+': '+INJURIES[k].note));
+  const off = KIT_KEYS.filter(k=>!_s.kit[k]).map(k=>KIT[k].label.toLowerCase());
   if(off.length) out.push('Built without ' + off.join(', ') + ' — every movement works with the kit you have.');
-  if(setup.exp === 'beginner') out.push('Beginner build: guided and simple movements only, the RPE targets sit a step lower, and every session fits inside ' + sessionCap() + ' minutes.');
-  if(setup.exp === 'advanced') out.push('Advanced build: technical lifts and plyometrics are favoured where they fit the pattern.');
+  if(_s.exp === 'beginner') out.push('Beginner build: guided and simple movements only, the RPE targets sit a step lower, and every session fits inside ' + sessionCap() + ' minutes.');
+  if(_s.exp === 'advanced') out.push('Advanced build: technical lifts and plyometrics are favoured where they fit the pattern.');
   return out;
 }
 
@@ -5394,9 +5406,10 @@ function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loa
   if(n >= 6 && out.length > 1) out[1] = out[0];
   return out;
 }
-function genWeekNames(goalKey, total){
+function genWeekNames(goalKey, total, ctx){
+  const _s = pgCtx(ctx);
   const model = GOAL_MODELS[goalKey || primaryGoal()];
-  const n = total || setup.weeks || 4, names = [];
+  const n = total || _s.weeks || 4, names = [];
   for(let i = 1; i <= n; i++){
     const w = model.weeks[phaseOf(i, n)];
     const ad = ADAPT[adaptFor(goalKey || primaryGoal(), i, n)];
@@ -6010,11 +6023,19 @@ async function finishTrack(){
 
 const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 function dowOf(iso){ return (new Date(iso + 'T12:00:00').getDay() + 6) % 7; }
-function startDow(){ return dowOf(setup.startDate || todayISO()); }
+/* ── scheduling ──
+   Explicit context, defaulting to the live globals exactly as readiness and scoring do.
+   ctx: { startDate, trainDows, liftDays, sched, plan, sessions, today } */
+function schCtx(c){
+  return c || { startDate:setup.startDate, trainDows:setup.trainDows, liftDays:setup.liftDays,
+                sched:state.sched, plan:state.plan, sessions:state.sessions, today:todayISO() };
+}
+function startDow(ctx){ const c = schCtx(ctx); return dowOf(c.startDate || c.today || todayISO()); }
 function defaultDows(n){ return (LIFT_DOWS[Math.max(1, Math.min(6, n))] || []).slice(); }
-function trainDows(){
-  const d = (setup.trainDows || []).filter(x=>x >= 0 && x < 7);
-  return d.length === setup.liftDays ? d.slice().sort((a,b)=>a-b) : defaultDows(setup.liftDays);
+function trainDows(ctx){
+  const c = schCtx(ctx);
+  const d = (c.trainDows || []).filter(x=>x >= 0 && x < 7);
+  return d.length === c.liftDays ? d.slice().sort((a,b)=>a-b) : defaultDows(c.liftDays);
 }
 /* Which days a toggle would leave you training, and why it might refuse. Pure, so the rule
    ("at least one, at most six") can be tested without a screen. */
@@ -6121,20 +6142,21 @@ function buildSchedule(liftNames, nRun, goalKey, startDow, chosenDows){
   }
   return { liftDows, lifts, runs, goal:goalKey, nLift, startDow:0, custom:!!custom };
 }
-function schedNow(){
-  if(state.sched && state.sched.liftDows) return state.sched;
-  return buildSchedule(state.plan.map(d=>d.name), 0, 'none');
+function schedNow(ctx){
+  const c = schCtx(ctx);
+  if(c.sched && c.sched.liftDows) return c.sched;
+  return buildSchedule((c.plan || []).map(d=>d.name), 0, 'none');
 }
-function weekRows(week){
-  const s = schedNow();
+function weekRows(week, ctx){
+  const s = schedNow(ctx);
   return DOW.map((label,d)=>({ i:d,
     d, label,
     lift: s.lifts[d] ? s.lifts[d].name : null,
     run: s.runs[d] !== undefined ? runSession(s.runs[d], week) : null
   }));
 }
-function scheduleNote(){
-  const s = schedNow();
+function scheduleNote(ctx){
+  const s = schedNow(ctx);
   if(!s.runs || !Object.keys(s.runs).length) return '';
   const clashes = Object.keys(s.runs).filter(d=>s.lifts[d]);
   const hardOnUpper = clashes.filter(d=> RUN_SESSIONS[s.runs[d]].hard >= 2).length;
@@ -6151,30 +6173,33 @@ function shuffleBank(){ state.seed = Math.floor(Math.random()*99999) + 1; render
    including the mid-function writes to state.weeks, which buildStagesFor reads back through
    weekCount(). Reordering those changes which program you get, so they stay exactly as they
    were; handoff/systems-golden.json holds this to byte-identical output. */
-function composeProgram(seed){
+function composeProgram(seed, ctx){
+  const _s = pgCtx(ctx);
   state.seed = seed;
-  const keys = splitFor(setup.liftDays), names = dayNames(keys), used = new Set();
+  const keys = splitFor(_s.liftDays), names = dayNames(keys), used = new Set();
   const newPlan = keys.map((k,di)=>({
     id: Date.now()+di, name: names[di],
-    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di), 1))
+    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
   }));
-  state.adaptations = { focus:setup.focus, emphasis:setup.emphasis.slice(), injuries:setup.injuries.slice(),
-    equip:setup.equip, notes:adaptationNotes() };
-  state.setup = JSON.parse(JSON.stringify(setup));
-  state.weeks = setup.weeks || 4;
-  newPlan.forEach((d, di)=>{ d.dayIdx = di; buildStagesFor(d, (state.seed || 1) * 31 + di * 977); });
-  governVolume(newPlan);
+  state.adaptations = { focus:_s.focus, emphasis:_s.emphasis.slice(), injuries:_s.injuries.slice(),
+    equip:_s.equip, notes:adaptationNotes(_s) };
+  state.setup = JSON.parse(JSON.stringify(_s));
+  state.weeks = _s.weeks || 4;
+  newPlan.forEach((d, di)=>{ d.dayIdx = di; buildStagesFor(d, (state.seed || 1) * 31 + di * 977, _s); });
+  governVolume(newPlan, _s);
   newPlan.forEach(d=>{ if(d.stages && d.stages.length) d.exercises = d.stages[0]; });
   state.plan = newPlan;
   ui.dayId = newPlan[0].id;
-  state.weekNames = genWeekNames(primaryGoal(), state.weeks);
-  state.runVisible = setup.runGoal !== 'none' && setup.runDays > 0;
-  state.runGoal = setup.runGoal;
-  state.runPace = setup.runPace || 0;
-  state.runExp = setup.runExp || 'some';
-  state.sched = buildSchedule(names, state.runVisible ? setup.runDays : 0, setup.runGoal, startDow(), trainDows());
+  state.weekNames = genWeekNames(primaryGoal(), state.weeks, _s);
+  state.runVisible = _s.runGoal !== 'none' && _s.runDays > 0;
+  state.runGoal = _s.runGoal;
+  state.runPace = _s.runPace || 0;
+  state.runExp = _s.runExp || 'some';
+  state.sched = buildSchedule(names, state.runVisible ? _s.runDays : 0, _s.runGoal,
+    startDow({ startDate:_s.startDate, today:todayISO() }),
+    trainDows({ trainDows:_s.trainDows, liftDays:_s.liftDays }));
   state.week = 1;
-  state.startDate = setup.startDate || todayISO();
+  state.startDate = _s.startDate || todayISO();
   return state.plan;
 }
 async function generateProgram(){
@@ -6779,12 +6804,21 @@ function mondayKey(iso){
   d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
   return localISO(d);
 }
-function allHistory(){
-  const arch = state.archive || [];
+/* ── scoring / history ──
+   Same arrangement as readiness: an explicit context, defaulting to the live globals so every
+   existing call site behaves exactly as before. ctx: { sessions, runs, archive, plan, sex, bw,
+   liftDays, today } */
+function scCtx(c){
+  return c || { sessions:state.sessions, runs:state.runs, archive:state.archive, plan:state.plan,
+                sex:state.sex, bw:state.bw, liftDays:setup.liftDays, today:todayISO() };
+}
+function allHistory(ctx){
+  const c = scCtx(ctx);
+  const arch = c.archive || [];
   return {
-    sessions: arch.reduce((a, x)=>a.concat(x.sessions || []), []).concat(state.sessions)
+    sessions: arch.reduce((a, x)=>a.concat(x.sessions || []), []).concat(c.sessions)
       .filter(s=>s && s.completed !== false).slice().sort((a, b)=>a.date < b.date ? -1 : 1),
-    runs: arch.reduce((a, x)=>a.concat(x.runs || []), []).concat(state.runs),
+    runs: arch.reduce((a, x)=>a.concat(x.runs || []), []).concat(c.runs),
     /* A filed-away program counts as FINISHED only if it was trained to its last week. Counting
        every archive entry meant abandoning a build and starting another awarded the thousand-point
        "programs finished" credit and its badge — so the fastest way to rank up was to keep
@@ -6803,21 +6837,23 @@ function allHistory(){
 }
 /* The gate reads every session ever logged, not just the current program — archiving a block
    must never erase the evidence for a rank already earned. */
-function bestOfAll(exName){
-  return allHistory().sessions.reduce((best, s)=>{
+function bestOfAll(exName, ctx){
+  return allHistory(ctx).sessions.reduce((best, s)=>{
     const e = (s.entries || {})[exName];
     if(!e || !e.length) return best;
     const t = topSet(e);
     return Math.max(best, e1rm(t.w, t.r));
   }, 0);
 }
-function gateLifts(){
-  const tbl = STANDARDS[state.sex === 'f' ? 'f' : 'm'];
-  const names = [...new Set(state.plan.map(d=>d.exercises[0] && d.exercises[0].name).filter(Boolean))];
+function gateLifts(ctx){
+  const c = scCtx(ctx);
+  const tbl = STANDARDS[c.sex === 'f' ? 'f' : 'm'];
+  const names = [...new Set((c.plan || []).map(d=>d.exercises[0] && d.exercises[0].name).filter(Boolean))];
   return names.filter(n=>tbl[n]).map(n=>({ name:n, std:tbl[n] }));
 }
-function gateCheck(){
-  const lifts = gateLifts(), bw = +state.bw || 0;
+function gateCheck(ctx){
+  const c = scCtx(ctx);
+  const lifts = gateLifts(c), bw = +c.bw || 0;
   if(!bw) return { known:false, why:'bw', lifts, tier:0 };
   if(!lifts.length) return { known:false, why:'lifts', lifts, tier:0 };
   const rows = lifts.map(l=>{
@@ -6829,8 +6865,9 @@ function gateCheck(){
   if(missing.length) return { known:false, why:'untested', lifts, rows, tier:0, missing };
   return { known:true, lifts, rows, tier:Math.min.apply(null, rows.map(r=>r.tier)) };
 }
-function scoreState(){
-  const H = allHistory();
+function scoreState(ctx){
+  const c = scCtx(ctx);
+  const H = allHistory(c);
   const best = {}, first = {}, moves = new Set();
   let prs = 0, sets = 0, reps = 0, volume = 0, bigSession = 0, prBest = 0, prSessions = 0;
   H.sessions.forEach(s=>{
@@ -6851,7 +6888,7 @@ function scoreState(){
   const doubled = Object.keys(best).filter(k=>first[k] && best[k] >= first[k] * 2).length;
   const perWeek = {};
   H.sessions.forEach(s=>{ const k = mondayKey(s.date); if(k) perWeek[k] = (perWeek[k] || 0) + 1; });
-  const target = Math.max(1, setup.liftDays || 3);
+  const target = Math.max(1, c.liftDays || 3);
   const weekKeys = Object.keys(perWeek).sort();
   const fullWeeks = weekKeys.filter(k=>perWeek[k] >= target).length;
   let streak = 0;
@@ -6889,7 +6926,7 @@ function scoreState(){
   const xp = H.sessions.length * XP.session + prs * XP.pr + fullWeeks * XP.week
     + H.runs.length * XP.run + H.blocks * XP.block + streakXp;
   const L = levelFor(xp);
-  const gate = gateCheck();
+  const gate = gateCheck(c);
   let rankIdx = 0;
   MEDALS.forEach((r, i)=>{
     if(L.lvl < r.lvl) return;
@@ -7750,10 +7787,11 @@ function weekStats(week){
   rows.forEach(r=>{ if(r.lift){ planned++; if(r.doneLift) done++; } });
   return { planned, done };
 }
-function consistency(){
+function consistency(ctx){
+  const c = scCtx(ctx);
   const lift = {}, run = {};
-  state.sessions.forEach(s=>{ if(s.completed !== false) lift[s.date] = true; });
-  state.runs.forEach(r=>{ run[r.date] = true; });
+  (c.sessions || []).forEach(s=>{ if(s.completed !== false) lift[s.date] = true; });
+  (c.runs || []).forEach(r=>{ run[r.date] = true; });
   return { lift, run };
 }
 /* ── Quality colour ───────────────────────────────────────────────────────────
@@ -8946,12 +8984,14 @@ function weeksDone(){
   state.sessions.forEach(s=>{ seen[s.week || 1] = true; });
   return Object.keys(seen).length;
 }
-function suggestDayId(){
-  if(!state.plan.length) return null;
-  const last = state.sessions[state.sessions.length - 1];
-  if(!last) return state.plan[0].id;
-  const i = state.plan.findIndex(d=>d.id === last.dayId);
-  return (state.plan[(i + 1) % state.plan.length] || state.plan[0]).id;
+function suggestDayId(ctx){
+  const c = schCtx(ctx);
+  const plan = c.plan || [], sessions = c.sessions || [];
+  if(!plan.length) return null;
+  const last = sessions[sessions.length - 1];
+  if(!last) return plan[0].id;
+  const i = plan.findIndex(d=>d.id === last.dayId);
+  return (plan[(i + 1) % plan.length] || plan[0]).id;
 }
 
 /* File the current program away whole — plan, sessions, runs and the setup that produced
@@ -9125,8 +9165,18 @@ const WHY = {
   cluster:'Tuesday through Thursday is where running mileage and lower-body lifting overlap, so the legs carry the most accumulated fatigue of the week right when they\u2019re asked to do the most. It\u2019s the highest-risk window in the block by design, which is why a sub-par readiness score or an active lower-limb symptom counts for more on those days than on a fresh Monday.'
 };
 
-/* ── readiness scoring ── */
-function todayReadiness(){ const t = todayISO(); return (state.readiness || []).slice().reverse().find(r=>r.date === t) || null; }
+/* ── readiness scoring ──
+   Each function below takes its inputs explicitly through a context object so the system can be
+   imported and driven without the app's globals. Omitting it falls back to the live state, which
+   is what every existing call site does — the behaviour and the execution order are unchanged.
+   ctx: { readiness, symptoms, plan, dayId, autoreg, today } */
+function rdCtx(c){
+  return c || { readiness:state.readiness, symptoms:state.symptoms, plan:state.plan,
+                dayId:ui.dayId, autoreg:state.autoreg, today:todayISO() };
+}
+
+function todayReadiness(ctx){ const c = rdCtx(ctx); const t = c.today || todayISO();
+  return (c.readiness || []).slice().reverse().find(r=>r.date === t) || null; }
 function readinessScore(r){
   if(!r) return null;
   const v = READINESS_Q.map(q=>+r[q.k] || 0).filter(x=>x > 0);
@@ -9143,10 +9193,11 @@ function readinessBand(score){
 }
 
 /* ── active symptoms: latest entry per region inside the window, severity ≥ 1 ── */
-function activeSymptoms(){
-  const cut = new Date(todayISO() + 'T12:00:00'); cut.setDate(cut.getDate() - SYMPTOM_WINDOW);
+function activeSymptoms(ctx){
+  const c = rdCtx(ctx);
+  const cut = new Date((c.today || todayISO()) + 'T12:00:00'); cut.setDate(cut.getDate() - SYMPTOM_WINDOW);
   const seen = {};
-  (state.symptoms || []).slice().sort((a,b)=> a.date < b.date ? 1 : -1).forEach(s=>{
+  (c.symptoms || []).slice().sort((a,b)=> a.date < b.date ? 1 : -1).forEach(s=>{
     if(seen[s.region]) return;
     if(new Date(s.date + 'T12:00:00') < cut) return;
     if((+s.sev || 0) < 1) return;
@@ -9161,7 +9212,9 @@ function sevBand(sev){
 }
 
 /* ── today's day + whether it loads the lower limb, and the fatigue-cluster test ── */
-function todaysDay(){ return day(ui.dayId) || (state.plan && state.plan[0]) || null; }
+function todaysDay(ctx){
+  const c = rdCtx(ctx);
+  return ((c.plan || []).find(d=>d.id === c.dayId)) || (c.plan && c.plan[0]) || null; }
 function dayGroups(d){
   const set = new Set();
   ((d && d.exercises) || []).forEach(ex=> (groupsOf(ex.name) || []).forEach(g=>set.add(g)));
@@ -9171,15 +9224,16 @@ function dayLoadsLower(d){
   const g = dayGroups(d);
   return ['quads','hamstrings','glutes','calves'].some(x=>g.has(x));
 }
-function inLowerCluster(){ const dw = dowOf(todayISO()); return dw === 2 || dw === 3 || dw === 4; } // Tue–Thu
+function inLowerCluster(ctx){ const c = rdCtx(ctx); const dw = dowOf(c.today || todayISO()); return dw === 2 || dw === 3 || dw === 4; } // Tue–Thu
 
 /* ── the one call that turns readiness + symptoms + the calendar into an instruction ── */
-function autoReg(){
-  const d = todaysDay();
+function autoReg(ctx){
+  const c = rdCtx(ctx);
+  const d = todaysDay(c);
   if(!d) return null;
-  const score = readinessScore(todayReadiness());
+  const score = readinessScore(todayReadiness(c));
   const band  = readinessBand(score);
-  const active = activeSymptoms();
+  const active = activeSymptoms(c);
 
   // movements in today's session that a currently-active symptom implicates
   const dg = dayGroups(d);
@@ -9199,7 +9253,7 @@ function autoReg(){
   flags.forEach(f=>{ if(f.sev >= 4) level = Math.max(level, 1); if(f.sev >= 7) level = Math.max(level, 2); });
 
   // the Tue–Thu lower-limb window escalates a sub-par read rather than creating one
-  const cluster = inLowerCluster() && dayLoadsLower(d) &&
+  const cluster = inLowerCluster(c) && dayLoadsLower(d) &&
     (level >= 1 || active.some(s=> LOWER_SYMPTOM_REGIONS.indexOf(s.region) > -1 && (+s.sev||0) >= 3));
   if(cluster && level >= 1) level = Math.min(3, level + 1);
 
@@ -9419,9 +9473,10 @@ function wellnessTrends(){
    override that trims a set from the movements that need it and caps the effort; nothing in the
    program or the log is rewritten, and Undo removes it. The set trim lands through targetSetCount,
    so both the Today tally and the session build see it. */
-function autoRegPlan(){
-  const ar = autoReg(); if(!ar || ar.level < 1) return null;
-  const d = todaysDay(); if(!d) return null;
+function autoRegPlan(ctx){
+  const c = rdCtx(ctx);
+  const ar = autoReg(c); if(!ar || ar.level < 1) return null;
+  const d = todaysDay(c); if(!d) return null;
   const names = (d.exercises || []).map(e=>e.name);
   const flagged = new Set();
   ar.flags.forEach(f=> (f.moves || []).forEach(n=>flagged.add(n)));
@@ -9433,9 +9488,10 @@ function autoRegPlan(){
   const rpeCap = ar.level >= 3 ? 6 : ar.level === 2 ? 7 : null;
   return { level:ar.level, moves, setDrop:1, rpeCap };
 }
-function autoRegActive(){
-  const o = state.autoreg;
-  return (o && o.date === todayISO() && o.dayId === ui.dayId) ? o : null;
+function autoRegActive(ctx){
+  const c = rdCtx(ctx);
+  const o = c.autoreg;
+  return (o && o.date === (c.today || todayISO()) && o.dayId === c.dayId) ? o : null;
 }
 function autoRegDelta(ex){
   const o = autoRegActive(); if(!o) return 0;
