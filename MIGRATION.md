@@ -210,8 +210,9 @@ efforts, autoreg }`, where `entries` is `{ movementName: [{w, r}] }` and
 `autoreg` records that readiness lightened that day.
 
 Today everything lives under the `trainlog-data-v3` localStorage key, with the
-open session under `trainlog-data-v3-session` and three small UI preferences
-under `tl-swap-persist`, `tl-mm3-show`, `tl-mm3-side`.
+open session under `trainlog-data-v3-session` and six per-device preferences
+under `tl-theme`, `tl-sess-dark`, `tl-mm3-show`, `tl-mm3-side`,
+`tl-swap-persist` and `tl-tour`. `LOVABLE_HANDOFF.md` §9 tabulates all eight.
 
 ---
 

@@ -1,20 +1,24 @@
 # Trainlog
 
-A single-file, offline-first strength and running log that runs entirely in the browser.
+An offline-first strength and running log that runs entirely in the browser.
 
-`index.html` is the whole app — markup, styles, and logic in one document. There is no
-build step and no server: open the file, or serve the directory statically, and it works.
+`index.html` is the UI — markup, styles, and the shell in one document. The training
+logic lives in `src/core/` (see `src/core/README.md`) and `handoff/trainlog-core.js`.
+There is no build step: serve the directory statically and it works.
+
+Porting it? Start with `LOVABLE_HANDOFF.md`, then `MIGRATION.md`.
 
 ## Running it
 
-Open `index.html` in a browser, or serve the folder:
+Serve the folder — the app is an ES module now, so `file://` will not load it:
 
 ```sh
 python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
 
-A static host works too, since the app is just the one file.
+Any static host works. Note that `index.html` imports `src/core/`, so the whole
+directory has to be served, not the one file.
 
 ## What's in it
 
