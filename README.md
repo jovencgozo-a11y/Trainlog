@@ -46,6 +46,8 @@ rules actually are:
   reps — beating the top of the range by two or more counts as easy and progresses; merely
   finishing is provisional and asks for one extra clean session before the bar moves. Silence
   never reads as a full green light.
+- **Timed holds** take their duration from the movement's own pattern — a wall sit is not a
+  Copenhagen plank — scaled by the week's adaptation and shortened on a deload.
 - **Bodyweight work** climbs on reps to the top of the goal's range, then steps up to a harder
   variation and rebuilds. Two sessions short of target step back down to an easier one.
 - **Load steps** scale with the lift (roughly 2.5–10%, floored at one 2.5 lb increment) and are
@@ -57,6 +59,13 @@ rules actually are:
 
 Progression history reads the archive as well as the current block, so earned weight survives
 a program rebuild.
+
+## In-session muscle map
+
+The workout screen pins a small 3D figure beside the current movement, lit to the muscle groups
+that movement trains. The two buttons on it move it to the other side of the screen and hide it;
+hidden, a **Muscles** chip brings it back. Both choices persist. The figure is mounted once per
+session and re-lit as you move between movements, so the whole session costs one WebGL context.
 
 ## Managing the week
 

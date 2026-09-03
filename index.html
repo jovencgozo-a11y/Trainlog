@@ -1929,6 +1929,45 @@ x}
 .progline.regress .proglvl{background:#c2621c;color:#fff}
 .progline.hold .progtag{background:color-mix(in srgb,var(--color-text) 10%,transparent);color:var(--color-text);opacity:.82}
 
+/* ── the session's own body map: a small figure pinned beside the movement ── */
+#sessmodel{position:fixed;inset:0;pointer-events:none;z-index:64}
+#sessmodel > *{pointer-events:auto}
+.mm3sess{position:absolute;top:calc(env(safe-area-inset-top,0px) + 62px);width:116px;
+  border-radius:14px;overflow:hidden;background:color-mix(in srgb,var(--color-surface) 92%,transparent);
+  border:1px solid var(--color-divider);box-shadow:var(--shadow-md);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mm3sess.right{right:10px} .mm3sess.left{left:10px}
+.mm3sesshead{display:flex;justify-content:flex-end;gap:2px;padding:3px 3px 0}
+.mm3btn{font:inherit;font-size:11px;line-height:1;width:20px;height:20px;border:0;cursor:pointer;
+  border-radius:6px;background:transparent;color:color-mix(in srgb,var(--color-text) 55%,transparent)}
+.mm3btn:hover{background:color-mix(in srgb,var(--color-text) 10%,transparent);color:var(--color-text)}
+.mm3sessstage{height:132px;width:100%}
+.mm3sessstage canvas{display:block;width:100%;height:100%}
+.mm3flat{padding:4px 8px}
+.mm3flat svg{width:100%;height:120px}
+.mm3sesslabel{padding:5px 8px 8px;font-size:9.5px;line-height:1.35;text-align:center;
+  font-weight:600;letter-spacing:.02em}
+.mm3peek{position:absolute;top:calc(env(safe-area-inset-top,0px) + 62px);
+  font:inherit;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 10px;border-radius:10px;cursor:pointer;border:1px solid var(--color-divider);
+  background:color-mix(in srgb,var(--color-surface) 92%,transparent);color:var(--color-text);
+  box-shadow:var(--shadow-sm);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mm3peek.right{right:10px} .mm3peek.left{left:10px}
+.mm3btn:focus-visible,.mm3peek:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
+@media (max-width:360px){ .mm3sess{width:98px} .mm3sessstage{height:112px} }
+/* the top block keeps clear of whichever side the map is pinned to */
+.sess.mm3-right .dots,.sess.mm3-right > .sessin > .kicker,.sess.mm3-right .sessin > h2,
+.sess.mm3-right .exacts{padding-right:126px}
+.sess.mm3-left .dots,.sess.mm3-left > .sessin > .kicker,.sess.mm3-left .sessin > h2,
+.sess.mm3-left .exacts{padding-left:126px}
+.sess .exacts{flex-wrap:wrap}
+@media (max-width:360px){
+  .sess.mm3-right .dots,.sess.mm3-right > .sessin > .kicker,.sess.mm3-right .sessin > h2,
+  .sess.mm3-right .exacts{padding-right:108px}
+  .sess.mm3-left .dots,.sess.mm3-left > .sessin > .kicker,.sess.mm3-left .sessin > h2,
+  .sess.mm3-left .exacts{padding-left:108px}
+}
+
 /* ── dragging a session between days on the Today calendar ── */
 .calcell.movable{cursor:grab;touch-action:pan-y}
 .calcell.dragging{cursor:grabbing;z-index:5;position:relative;opacity:.94;
@@ -2029,6 +2068,7 @@ html.theme-dark .medaldot{
   <nav id="nav"></nav>
 </div>
 <div id="session"></div>
+<div id="sessmodel"></div>
 <div id="restbar"></div>
 <div id="track"></div>
 <div id="tour"></div>
@@ -2064,7 +2104,9 @@ let state = {
   symptoms: []
 };
 let ui = { tab:'today', tour:null, editPlan:false,
-  swapPersist:(()=>{ try{ return localStorage.getItem('tl-swap-persist') !== '0'; }catch(e){ return true; } })(), logTab:'rank', dayPicked:false, dayId:null, sess:null, w:0, r:0, pr:null, swap:false };
+  swapPersist:(()=>{ try{ return localStorage.getItem('tl-swap-persist') !== '0'; }catch(e){ return true; } })(),
+  mm3show:(()=>{ try{ return localStorage.getItem('tl-mm3-show') !== '0'; }catch(e){ return true; } })(),
+  mm3side:(()=>{ try{ return localStorage.getItem('tl-mm3-side') === 'left' ? 'left' : 'right'; }catch(e){ return 'right'; } })(), logTab:'rank', dayPicked:false, dayId:null, sess:null, w:0, r:0, pr:null, swap:false };
 
 const $ = s => document.querySelector(s);
 const localISO = d => {
@@ -3130,9 +3172,9 @@ function repairPlanNames(){
          meant to remove. */
       const gk = e.goal || (m ? goalForTier(m.tier, m.p) : primaryGoal());
       const band = repBandFor(gk, m && m.p, e.name);
-      const held = isTimedMove(m) ? holdSecs(gk, state.week, weekCount()) : 0;
+      const held = isTimedMove(m) ? holdSecs(gk, state.week, weekCount(), m && m.p) : 0;
       e.targets = e.targets.map((t, wi)=>{
-        const next = snapTarget(String(t), band, held ? holdSecs(gk, wi + 1, weekCount()) : 0);
+        const next = snapTarget(String(t), band, held ? holdSecs(gk, wi + 1, weekCount(), m && m.p) : 0);
         if(next !== t) fixed++;
         return next;
       });
@@ -5234,15 +5276,33 @@ function isTimedMove(m){
   if(TIMED_RE.test(n)) return true;
   return HANG_RE.test(n);
 }
-/* Seconds per set, by what the week is training. Endurance and light work hold longer; strength
-   and power work holds briefly and hard. */
-function holdSecs(goalKey, week, total){
+/* How long a hold should last depends first on WHAT is being held. Every timed movement in the
+   bank used to get the same number off the week's adaptation alone, so a dead hang, a farmer
+   carry, a wall sit and a bird dog were all prescribed 30 seconds — and on a strength week all
+   of them dropped to 20, which is under the useful stimulus for most of them. The movement's
+   own pattern sets the base; the week's adaptation scales it. */
+const HOLD_BASE = {
+  core_anti_ext:40,        // plank, hollow hold, dead bug — the long-lever anti-extension work
+  core_anti_rot:35,        // bird dog, pallof walkout — control, not endurance
+  core_anti_lat:35,        // side plank, one side at a time
+  carry:40,                // loaded carries are usually run 30–45s a side
+  quad_iso:45,             // wall sits are cheap to hold and want real time under tension
+  ham_iso:35,
+  calf:35,
+  vpull:35,                // dead hang — grip gives out first
+  adductor:25              // Copenhagen planks are brutal; 25s is already a real set
+};
+const HOLD_DEFAULT = 35;
+function holdSecs(goalKey, week, total, pattern){
+  const base = HOLD_BASE[pattern] || HOLD_DEFAULT;
   const a = ADAPT[adaptFor(goalKey, week, total)];
-  if(!a) return 30;
-  if(a === ADAPT.maxstrength || a === ADAPT.power) return 20;
-  if(a === ADAPT.strhyp) return 25;
-  if(a === ADAPT.endurance || a === ADAPT.hyphigh) return 45;
-  return 30;
+  let k = 1;
+  if(a === ADAPT.maxstrength || a === ADAPT.power) k = 0.7;      // shorter, usually loaded
+  else if(a === ADAPT.strhyp) k = 0.85;
+  else if(a === ADAPT.endurance || a === ADAPT.hyphigh) k = 1.4;
+  /* A deload that shortens every set except the isometrics is not a deload. */
+  if(phaseOf(week, total || weekCount()) === 3) k *= 0.75;
+  return Math.max(20, Math.round(base * k / 5) * 5);
 }
 /* The last word on a rep count. Every shift — block, undulation, small-muscle window — happens
    before this, so snapping here is the only way an awkward number cannot survive. */
@@ -5314,7 +5374,7 @@ function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loa
       : Math.max(range[0], Math.min(range[1], s + grow));
     const wave = easy ? null : waveSets(sets, reps, gk, pattern, tierIn || 2);
     const repText = snapTarget(evenReps(wave ? '×' + wave : reps, band), band,
-      timedMove ? holdSecs(gk, i, n) : 0);
+      timedMove ? holdSecs(gk, i, n, pattern) : 0);
     const role = duKey && duKey !== 'moderate' ? ' · ' + duKey + ' day' : '';
     /* Load sits straight after the sets and reps — the prescription is incomplete
        without it, and it is what makes the week's adaptation actionable. */
@@ -7038,7 +7098,11 @@ function sessEx(i){
      after a rebuild trimmed the day. Without this the session screen throws. */
   if(!raw) return { name:'', targets:[] };
   const sw = ui.sess.swaps[raw.name];
-  return sw ? { name:sw, targets:raw.targets, note:'Swapped in for ' + raw.name } : raw;
+  if(!sw) return raw;
+  const sm = byName[sw];
+  return { name:sw, targets:((ui.sess.swapTargets || {})[raw.name] || raw.targets),
+    goal:(sm ? goalForTier(sm.tier, sm.p) : raw.goal),
+    note:'Swapped in for ' + raw.name };
 }
 /* Big lifts get two light practice sets first; small isolation work does not need them. */
 function ensureSets(ex){
@@ -7246,7 +7310,7 @@ async function startSession(){
     if(!await askConfirm('A ' + day(open.dayId).name + ' workout is still open with ' + n +
       ' set' + (n === 1 ? '' : 's') + ' logged. Start a new one and discard it?')) { resumeSession(); return; }
   }
-  ui.sess = { dayId:ui.dayId, i:0, sets:{}, swaps:{}, effort:{}, phase:'warmup', warm:{}, startedAt:Date.now() };
+  ui.sess = { dayId:ui.dayId, i:0, sets:{}, swaps:{}, swapTargets:{}, effort:{}, phase:'warmup', warm:{}, startedAt:Date.now() };
   writeOpenSession(); render();
   maybeRevealProgress();
 }
@@ -7298,6 +7362,7 @@ async function finishSession(){
     dayName:d.name, entries, volume:vol, minutes:mins, efforts:(ui.sess.effort || {}),
     autoreg: (_ar && _ar.level) ? _ar.level : 0 });
   ui.justFinished = todayISO();
+  try{ if(window.disposeSessionModel) window.disposeSessionModel(); }catch(e){}
   ui.sess = null; state.openSession = null;
   try{ localStorage.removeItem(SKEY); }catch(e){}
   normalizeData();
@@ -7370,14 +7435,59 @@ async function doSwap(nameIn){
   if(!name || !ui.sess) return;
   const d = day(ui.sess.dayId), raw = d.exercises[ui.sess.i];
   if(!raw) return;
-  ui.sess.swaps[raw.name] = name;
+  const was = raw.name;
+  const m = byName[name];
+  /* A swap changed the NAME and kept the outgoing movement's prescription, so the incoming one
+     inherited numbers written for something else. On a held movement that was visibly wrong:
+     swap a pressing or crunching movement for a plank and its rep count came across as the hold,
+     relabelled in seconds — an 8–10 rep target became an 8–10 SECOND plank — and a "% 1RM" that
+     means nothing for an isometric came with it. levelUp and levelDown already regenerate; this
+     is the same thing, and now so does this. */
+  let tg = null, gk = null;
+  if(m){
+    gk = goalForTier(m.tier, m.p);
+    try{
+      tg = genTargets(setsIn(raw) || 3, gk, weekCount(), m.p, m.tier,
+        d.dayIdx || 0, 0, loadKindOf(m), m.n);
+    }catch(e){ tg = null; }
+  }
   if(ui.swapPersist !== false){
     raw.name = name;
-    const m = byName[name]; if(m) raw.note = m.note;
+    if(m){ raw.note = m.note; if(gk) raw.goal = gk; if(tg) raw.targets = tg; }
     delete ui.sess.swaps[name];
+    delete ui.sess.swaps[was];
+  } else {
+    ui.sess.swaps[was] = name;
+    /* the non-persisting swap needs its own prescription too, or sessEx hands back the
+       original movement's targets under the new movement's name */
+    ui.sess.swapTargets = ui.sess.swapTargets || {};
+    if(tg) ui.sess.swapTargets[was] = tg;
   }
+  /* rows were built from the old prescription — drop them so they rebuild from the new one */
+  if(ui.sess.sets){ delete ui.sess.sets[was]; delete ui.sess.sets[name]; }
   ui.swap = false;
   writeOpenSession(); await save(); render();
+}
+/* The map floats over the session, so the block beside it has to reserve room — otherwise it
+   covers the movement title on the left and the Swap button on the right. Every branch of
+   renderSession() carries this class, so the layout does not jump between the warm-up screen
+   and the movement screen. */
+function mm3Cls(){ return ui.mm3show ? ' mm3-' + (ui.mm3side === 'left' ? 'left' : 'right') : ''; }
+/* Show / hide, and which side it sits on. Both persist across sessions and devices-per-browser,
+   because where a widget lives on screen is a standing preference, not a per-session decision. */
+function toggleSessModel(){
+  ui.mm3show = !ui.mm3show;
+  try{ localStorage.setItem('tl-mm3-show', ui.mm3show ? '1' : '0'); }catch(e){}
+  if(!ui.mm3show && window.disposeSessionModel) window.disposeSessionModel();
+  /* the session carries the clearance class, so it has to repaint too — moving or hiding the
+     map without it left the content reserving space on the side the map had just left */
+  if(ui.sess) renderSession(); else if(window.renderSessionModel) window.renderSessionModel();
+  toast(ui.mm3show ? 'Muscle map shown' : 'Muscle map hidden — tap Muscles to bring it back');
+}
+function flipSessModel(){
+  ui.mm3side = ui.mm3side === 'left' ? 'right' : 'left';
+  try{ localStorage.setItem('tl-mm3-side', ui.mm3side); }catch(e){}
+  if(ui.sess) renderSession(); else if(window.renderSessionModel) window.renderSessionModel();
 }
 function toggleSwapPersist(){
   ui.swapPersist = ui.swapPersist === false;
@@ -8580,14 +8690,15 @@ function renderSession(){
     });
     body += '<div class="brow" style="margin-top:18px"><button class="b pri" onclick="beginLifting()">Start lifting' +
       (dw.exercises[0] ? ' — ' + esc(dw.exercises[0].name) : '') + '</button></div>';
-    $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head + body + '</div></div>';
+    $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + mm3Cls() + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head + body + '</div></div>';
     _restore();
+    try{ if(window.renderSessionModel) window.renderSessionModel(); }catch(e){}
     return;
   }
 
   const i = ui.sess.i || 0;
   const ex = sessEx(i);
-  if(!ex.name){ $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head +
+  if(!ex.name){ $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + mm3Cls() + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head +
     '<p class="empty">This movement is no longer in the plan.</p></div></div>'; _restore(); return; }
   const rows = ensureSets(ex);
   const t = tgt(ex, state.week);
@@ -8688,14 +8799,16 @@ function renderSession(){
     (nxt ? '<button class="b pri" onclick="sessGo(1)">Next movement</button>'
          : '<button class="b pri" onclick="finishSession()">Finish workout</button>') + '</div>';
 
-  $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head + body + '</div></div>';
+  $('#session').innerHTML = '<div class="sess' + (sessDark() ? ' dark' : '') + mm3Cls() + '" style="--rq:' + roleVar(dw) + '"><div class="sessin">' + head + body + '</div></div>';
   _restore();
+  try{ if(window.renderSessionModel) window.renderSessionModel(); }catch(e){}
 }
 async function closeSession(){
   const n = ui.sess ? sessionSetCount(ui.sess) : 0;
   if(n && !await askConfirm(n + ' set' + (n === 1 ? '' : 's') + ' logged. Leave the workout open and come back to it?')){
     return;
   }
+  try{ if(window.disposeSessionModel) window.disposeSessionModel(); }catch(e){}
   ui.sess = null; writeOpenSession(); render();
 }
 /* paintRest was only ever called from render(), so the countdown painted once and then sat
@@ -8779,6 +8892,7 @@ function writeOpenSession(){
   try{ if(ui.sess) localStorage.setItem(SKEY, JSON.stringify(ui.sess)); else localStorage.removeItem(SKEY); }catch(e){}
 }
 function discardSession(){
+  try{ if(window.disposeSessionModel) window.disposeSessionModel(); }catch(e){}
   ui.sess = null; ui.resumed = false; state.openSession = null;
   try{ localStorage.removeItem(SKEY); }catch(e){}
   saveNow(); render();
@@ -9827,6 +9941,92 @@ load();
     }
     return '<svg viewBox="0 0 100 200" width="100%">' + s + '</svg>';
   }
+  /* ══ the session's own body map ══
+     A muscle map on the Today screen answers "what does this session train". Mid-set the
+     question is narrower: what is THIS movement working. The widget lives in its own container
+     outside #session, because renderSession() replaces that element's innerHTML on every set
+     tick — mounting inside it would build and tear down a WebGL context several times a minute,
+     and browsers cap those at about sixteen. Here the figure is mounted once when the session
+     opens and only re-lit as you move between movements. */
+  let sessM = { handle:null, key:null, mounting:false };
+  const slugsForGroups = gs => {
+    const set = new Set();
+    (gs || []).forEach(g=>(SLUGS[g] || []).forEach(x=>set.add(x)));
+    return set;
+  };
+  window.disposeSessionModel = function(){
+    if(sessM.handle){ try{ sessM.handle.dispose(); }catch(e){} }
+    sessM = { handle:null, key:null, mounting:false };
+    const host = document.getElementById('sessmodel');
+    if(host) host.innerHTML = '';
+  };
+  window.renderSessionModel = function(){
+    const host = document.getElementById('sessmodel');
+    if(!host) return;
+    if(!ui.sess){ window.disposeSessionModel(); return; }
+    const ex = sessEx(ui.sess.i || 0);
+    if(!ex || !ex.name){ window.disposeSessionModel(); return; }
+
+    if(!ui.mm3show){
+      window.disposeSessionModel();
+      host.innerHTML = '<button class="mm3peek ' + ui.mm3side + '" onclick="toggleSessModel()" ' +
+        'aria-label="Show the muscles this movement trains">Muscles</button>';
+      return;
+    }
+    const m = byName[ex.name];
+    const groups = (m && m.g && m.g.length) ? m.g : (groupsOf(ex.name) || []);
+    const lit = slugsForGroups(groups);
+    const key = ex.name;
+
+    /* rebuild the shell only when it is not already there; re-light on every movement change */
+    if(!host.querySelector('.mm3sess')){
+      host.innerHTML =
+        '<div class="mm3sess ' + ui.mm3side + '">' +
+          '<div class="mm3sesshead">' +
+            '<button class="mm3btn" onclick="flipSessModel()" aria-label="Move to the other side">\u21c4</button>' +
+            '<button class="mm3btn" onclick="toggleSessModel()" aria-label="Hide the muscle map">\u2715</button>' +
+          '</div>' +
+          '<div class="mm3sessstage"></div>' +
+          '<div class="mm3sesslabel"></div>' +
+        '</div>';
+      sessM = { handle:null, key:null, mounting:false };
+    }
+    const wrap = host.querySelector('.mm3sess');
+    wrap.classList.toggle('left', ui.mm3side === 'left');
+    wrap.classList.toggle('right', ui.mm3side !== 'left');
+    const label = host.querySelector('.mm3sesslabel');
+    if(label) label.innerHTML = groups.length
+      ? groups.map(g=>'<span style="color:' + (hueOf(g) || 'inherit') + '">' + esc((GROUPS[g] && GROUPS[g].label) || g) + '</span>').join(' · ')
+      : '<span class="dim">whole body</span>';
+
+    const stage = host.querySelector('.mm3sessstage');
+    if(sessM.handle){                                    // mounted already — just re-light it
+      if(sessM.key !== key){ sessM.handle.setLit(lit); sessM.key = key; }
+      return;
+    }
+    /* A mount is asynchronous, and renderSession() can fire several times while it is in
+       flight — without this guard each one starts its own, and a handful of movement changes
+       burns through the browser's WebGL context budget. */
+    if(sessM.mounting){ sessM.key = key; return; }
+    sessM.key = key;
+    if(!hasWebGL()){ stage.innerHTML = '<div class="mm3flat">' + mapSvg('anterior', lit) + '</div>'; return; }
+    sessM.mounting = true;
+    mountModel(stage, lit, { inline:true, pad:1.16, spin:0.0016 })
+      .then(h=>{
+        sessM.mounting = false;
+        if(!stage.isConnected || !ui.mm3show || !ui.sess){ h.dispose(); return; }
+        sessM.handle = h;
+        /* the movement may have changed while it was building — light what is current */
+        const cur = sessEx(ui.sess.i || 0);
+        const cm = cur && byName[cur.name];
+        if(cur && cur.name !== key){
+          h.setLit(slugsForGroups((cm && cm.g && cm.g.length) ? cm.g : (groupsOf(cur.name) || [])));
+          sessM.key = cur.name;
+        }
+      })
+      .catch(()=>{ sessM.mounting = false;
+        stage.innerHTML = '<div class="mm3flat">' + mapSvg('anterior', lit) + '</div>'; });
+  };
   window.paintBody = function(){
     const card = document.getElementById('bodycard');
     if(!card) return;
