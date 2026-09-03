@@ -1,0 +1,13 @@
+{
+  "name": "trainlog-engine",
+  "version": "1.0.0",
+  "description": "Trainlog decision engine — verified, portable, framework-free",
+  "type": "module",
+  "main": "trainlog-core.js",
+  "exports": { ".": "./trainlog-core.js", "./data/*": "./data/*" },
+  "scripts": {
+    "test": "node --test *.test.js"
+  },
+  "files": ["trainlog-core.js", "engine-golden.json", "data"],
+  "license": "UNLICENSED"
+}

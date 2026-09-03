@@ -1,0 +1,16 @@
+# The engine prescribes loads that people put on a bar. Every change to it runs
+# the full net before it can merge: 14 characterization tests for the rules that
+# matter, and ~28,000 recorded cases proving nothing else moved.
+name: engine
+on:
+  push: { paths: ['handoff/**'] }
+  pull_request: { paths: ['handoff/**'] }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm test
+        working-directory: handoff

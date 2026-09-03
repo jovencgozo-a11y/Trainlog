@@ -9592,7 +9592,15 @@ function loadRec(exName){
     }
     return { w:w, action:'hold', why:'You came up short last time, so this holds the weight. Own these reps before it moves.' };
   }
+  /* Below about 17 lb the smallest plate in the room IS a big relative jump — 5 to 7.5 lb is
+     fifty percent. The increment cannot be made smaller, so it is made harder to earn instead:
+     a step that large asks for one more clean session than a proportionate one would. Isolation
+     and rehab work lives at exactly these loads, and that is where an unearned jump hurts. */
+  const bigStep = (step / w) > 0.15;
   if(last.eff === 'easy'){
+    const ok = !bigStep || (h[1] && h[1].w === w && h[1].hit && (h[1].eff === 'easy' || h[1].eff === 'solid'));
+    if(!ok) return { w:w, action:'hold',
+      why:'You had room, but the smallest step available here is ' + Math.round(step / w * 100) + '% of the weight. One more clean session and it moves.' };
     const nw = up();
     return nw > w ? { w:nw, action:'progress', why:'You hit every rep with room to spare, so it goes up ' + (nw - w) + ' lb. Earned, not scheduled.' }
                   : { w:w, action:'hold', why:'You had room, but this is as fast as it should climb this week. It moves next time.' };
@@ -9612,7 +9620,7 @@ function loadRec(exName){
     if(x.hit && (x.eff === 'solid' || x.eff === 'easy')){ earns++; if(x.assumed) assumed = true; }
     else break;
   }
-  const bar = earnedThreshold() + (assumed ? 1 : 0);
+  const bar = earnedThreshold() + (assumed ? 1 : 0) + (bigStep ? 1 : 0);
   if(earns >= bar){
     const nw = up();
     return nw > w ? { w:nw, action:'progress', why:'Clean reps ' + earns + ' session' + (earns === 1 ? '' : 's') + ' running at ' + w + ' lb — it goes up ' + (nw - w) + ' lb.' }
@@ -9620,6 +9628,7 @@ function loadRec(exName){
   }
   const need = bar - earns;
   return { w:w, action:'hold', why:'Solid work. ' + need + ' more clean session' + (need === 1 ? '' : 's') + ' at ' + w + ' lb and it goes up.' +
+    (bigStep ? ' The smallest step here is ' + Math.round(step / w * 100) + '% of the weight, so it is worth being sure.' : '') +
     (assumed ? ' Tap how a set felt and it can move sooner — an untapped session counts, just more cautiously.' : '') };
 }
 

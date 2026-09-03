@@ -209,7 +209,15 @@ export function decideLoad(history, opts){
     }
     return { w:w, action:'hold', why:'You came up short last time, so this holds the weight. Own these reps before it moves.' };
   }
+  /* Below about 17 lb the smallest plate in the room IS a big relative jump — 5 to 7.5 lb is
+     fifty percent. The increment cannot be made smaller, so it is made harder to earn instead:
+     a step that large asks for one more clean session than a proportionate one would. Isolation
+     and rehab work lives at exactly these loads, and that is where an unearned jump hurts. */
+  const bigStep = (step / w) > 0.15;
   if(last.eff === 'easy'){
+    const ok = !bigStep || (h[1] && h[1].w === w && h[1].hit && (h[1].eff === 'easy' || h[1].eff === 'solid'));
+    if(!ok) return { w:w, action:'hold',
+      why:'You had room, but the smallest step available here is ' + Math.round(step / w * 100) + '% of the weight. One more clean session and it moves.' };
     const nw = up();
     return nw > w
       ? { w:nw, action:'progress', why:'You hit every rep with room to spare, so it goes up ' + (nw - w) + ' lb. Earned, not scheduled.' }
@@ -229,7 +237,7 @@ export function decideLoad(history, opts){
     if(x.hit && (x.eff === 'solid' || x.eff === 'easy')){ earns++; if(x.assumed) assumed = true; }
     else break;
   }
-  const bar = earnedThreshold(o.exp) + (assumed ? 1 : 0);
+  const bar = earnedThreshold(o.exp) + (assumed ? 1 : 0) + (bigStep ? 1 : 0);
   if(earns >= bar){
     const nw = up();
     return nw > w
@@ -239,6 +247,7 @@ export function decideLoad(history, opts){
   const need = bar - earns;
   return { w:w, action:'hold',
     why:'Solid work. ' + need + ' more clean session' + (need === 1 ? '' : 's') + ' at ' + w + ' lb and it goes up.' +
+      (bigStep ? ' The smallest step here is ' + Math.round(step / w * 100) + '% of the weight, so it is worth being sure.' : '') +
       (assumed ? ' Tap how a set felt and it can move sooner — an untapped session counts, just more cautiously.' : '') };
 }
 
@@ -280,4 +289,120 @@ export function decideReps(history, opts){
   if(earned) return { r:Math.min(ceiling, cur + 1), action:'progress',
     why:'You cleared these, so add a rep. Reps climb to ' + ceiling + ', then the movement itself levels up — that’s how bodyweight work keeps overloading.' };
   return { r:cur, action:'hold', why:'Solid — a clean session or two more and the reps step up.' };
+}
+
+/* ── safety envelope ──────────────────────────────────────────────────────────
+   Everything above decides. This decides whether a decision is safe to show.
+
+   The reason it exists: a port can wire the engine up wrongly without any
+   function in it being wrong. Pass the sessions in oldest-first and the ratchet
+   reads the wrong "last" session. Forget to filter warm-up sets and the top set
+   is a 50% bar. Lose the archive and the history is empty. None of those throw —
+   they just put a number on a screen, and somebody loads it onto a bar.
+
+   So no prescription reaches an athlete without passing through here. A breach is
+   a bug in the caller, not a value to clamp silently: it returns the safe number
+   AND says what was wrong, so it can be surfaced, logged, and fixed. */
+
+/** Hard limits. Chosen to be loose enough that correct output never trips them,
+ *  tight enough that a wiring mistake always does. */
+export const LIMITS = {
+  maxJumpPct: 0.12,        // one session's increase, above the recent best
+  maxJumpAbs: 12,          // …unless the absolute step is small (plate granularity)
+  maxLoad: 1500,           // lb; above this the input was a typo, not a lift
+  minLoad: 0,
+  maxReps: 60,
+  maxHoldSecs: 120,
+  minHoldSecs: 15,
+  maxPct1RM: 95,
+  minPct1RM: 25
+};
+
+/**
+ * Vet a load recommendation before it is shown.
+ *
+ * @param {{w:number,action:string,why:string}|null} rec  from decideLoad
+ * @param {{history:{w:number}[], movement?:string}} ctx
+ * @returns {{rec:object|null, safe:boolean, breaches:string[]}}
+ *          `rec` is always safe to display; `breaches` is non-empty when the
+ *          caller handed us something impossible and should be reported.
+ */
+export function vetLoad(rec, ctx){
+  const breaches = [];
+  if(!rec) return { rec:null, safe:true, breaches };
+  const where = (ctx && ctx.movement) ? ` [${ctx.movement}]` : '';
+  const recent = ((ctx && ctx.history) || []).map(h => h.w).filter(x => x > 0);
+  const best = recent.length ? Math.max.apply(null, recent) : 0;
+  let w = rec.w;
+
+  if(!isFinite(w) || w < LIMITS.minLoad){
+    breaches.push(`non-finite or negative load ${w}${where}`);
+    w = best || 0;
+  }
+  if(w > LIMITS.maxLoad){
+    breaches.push(`load ${w} exceeds ${LIMITS.maxLoad} lb${where} — check for a mistyped set`);
+    w = Math.min(w, best || LIMITS.maxLoad);
+  }
+  if(best && w > best){
+    const jump = w - best;
+    if(jump > LIMITS.maxJumpAbs && jump / best > LIMITS.maxJumpPct){
+      breaches.push(`jump of ${jump} lb (${Math.round(jump / best * 100)}%) over a best of ${best}${where}` +
+        ' — the ratchet should never move this far in one session; check history order and warm-up filtering');
+      w = Math.round(best * (1 + LIMITS.maxJumpPct) / 2.5) * 2.5;
+    }
+  }
+  if(rec.action === 'progress' && best && w <= best) breaches.push(`action 'progress' but load did not rise${where}`);
+  if(rec.action === 'deload' && best && w >= best) breaches.push(`action 'deload' but load did not fall${where}`);
+
+  return { rec: w === rec.w ? rec : Object.assign({}, rec, { w, clamped:true }), safe: !breaches.length, breaches };
+}
+
+/** Vet a prescribed hold. */
+export function vetHold(secs, ctx){
+  const breaches = [];
+  let s = secs;
+  if(!isFinite(s) || s < LIMITS.minHoldSecs){
+    breaches.push(`hold of ${secs}s is below ${LIMITS.minHoldSecs}s${ctx && ctx.movement ? ` [${ctx.movement}]` : ''}` +
+      ' — a rep count has probably been relabelled as seconds');
+    s = LIMITS.minHoldSecs;
+  }
+  if(s > LIMITS.maxHoldSecs){
+    breaches.push(`hold of ${secs}s exceeds ${LIMITS.maxHoldSecs}s`);
+    s = LIMITS.maxHoldSecs;
+  }
+  return { secs:s, safe: !breaches.length, breaches };
+}
+
+/** Vet a prescribed percentage of 1RM. */
+export function vetPct(pct, ctx){
+  const breaches = [];
+  let v = pct;
+  if(v == null) return { pct:null, safe:true, breaches };
+  if(!isFinite(v) || v < LIMITS.minPct1RM || v > LIMITS.maxPct1RM){
+    breaches.push(`prescribed ${v}% 1RM is outside ${LIMITS.minPct1RM}–${LIMITS.maxPct1RM}%` +
+      (ctx && ctx.movement ? ` [${ctx.movement}]` : ''));
+    v = Math.max(LIMITS.minPct1RM, Math.min(LIMITS.maxPct1RM, isFinite(v) ? v : LIMITS.minPct1RM));
+  }
+  return { pct:v, safe: !breaches.length, breaches };
+}
+
+/**
+ * Sanity-check a history array before the ratchet reads it. Catches the wiring
+ * mistakes that produce plausible-looking but wrong prescriptions.
+ * @returns {string[]} breaches — empty means the shape is trustworthy
+ */
+export function vetHistory(history){
+  const b = [];
+  const h = history || [];
+  if(!h.length) return b;
+  for(const x of h){
+    if(typeof x.w !== 'number' || !isFinite(x.w)) b.push('history row has a non-numeric weight');
+    if(typeof x.hit !== 'boolean') b.push('history row is missing the hit/miss judgement — was judgeSession applied?');
+    if(x.r > LIMITS.maxReps) b.push(`history row reports ${x.r} reps, above ${LIMITS.maxReps} — warm-up or junk data`);
+  }
+  /* newest-first is the contract; dates going forwards means the caller reversed it */
+  const dated = h.filter(x => x.date);
+  if(dated.length > 1 && dated[0].date < dated[dated.length - 1].date)
+    b.push('history appears oldest-first; decideLoad expects newest-first and will read the wrong session as "last"');
+  return [...new Set(b)];
 }
