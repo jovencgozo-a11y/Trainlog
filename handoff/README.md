@@ -8,6 +8,8 @@ trainlog-core.js        the decision engine + safety envelope, no DOM, no global
 trainlog-core.test.js   14 characterization tests — the rules that matter
 engine-golden.test.js   replays the golden master + the envelope's own tests
 engine-golden.json      27,898 recorded input→output pairs from the shipping app
+systems-golden.test.js  replays program generation, scheduling, readiness, scoring
+systems-golden.json     3,006 recorded cases for those four (needs the app served)
 data/                   248 movements + the tables that classify them
 package.json            `npm test` runs all 17
 ```
@@ -32,7 +34,16 @@ Treat any diff to that file that did not come with a matching test as a defect
 and revert it.
 
 ```
-npm test        # 17 passing, ~0.2s — wire this into CI before anything else
+npm test        # 21 passing — wire this into CI before anything else
+```
+
+The four system suites drive a live `index.html` in headless Chromium, because
+those systems still read the app's global state. Serve the repo root and point
+them at it:
+
+```
+python3 -m http.server 8831 &
+APP_URL=http://localhost:8831/index.html npm test
 ```
 
 ## The safety net, and how to use it
@@ -97,13 +108,14 @@ number: the app can always explain the weight it is asking for.
 
 ## What is NOT in here
 
-The parts that are still coupled to the DOM in the parent app and need the module
-split (phase 0 of the migration plan) before they can travel:
+Program generation, scheduling, readiness and scoring are now DOM-free and
+covered by `systems-golden.json`, but they still read the app's global `state`
+and `setup` rather than taking them as arguments — so they can be tested and
+reasoned about in place, but not yet imported standalone. That parameterisation
+is the remaining work before they can travel.
 
-- program generation — `generateProgram`, `buildDay`, `genTargets`, `governVolume`
-- scheduling — `buildSchedule`, `weekRows`
-- the readiness/autoregulation reader and the scoring/rank system
-- the muscle-map slug tables, which are coupled to the SVG and the 3D figure
+The muscle-map slug tables stay behind: they are coupled to the SVG and the 3D
+figure.
 
 Until then, the parent `index.html` is the reference implementation for those.
 It is a single file with no build step: open it, or serve the directory.

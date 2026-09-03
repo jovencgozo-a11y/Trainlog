@@ -6016,19 +6016,25 @@ function trainDows(){
   const d = (setup.trainDows || []).filter(x=>x >= 0 && x < 7);
   return d.length === setup.liftDays ? d.slice().sort((a,b)=>a-b) : defaultDows(setup.liftDays);
 }
-function toggleTrainDow(d){
-  let cur = trainDows().slice();
-  const i = cur.indexOf(d);
+/* Which days a toggle would leave you training, and why it might refuse. Pure, so the rule
+   ("at least one, at most six") can be tested without a screen. */
+function nextTrainDows(cur, d){
+  const days = (cur || []).slice();
+  const i = days.indexOf(d);
   if(i > -1){
-    if(cur.length <= 1) return toast('You need at least one training day');
-    cur.splice(i, 1);
-    setup.liftDays = cur.length;
+    if(days.length <= 1) return { days, refused:'You need at least one training day' };
+    days.splice(i, 1);
   } else {
-    if(cur.length >= 6) return toast('Six training days is the most Trainlog will write');
-    cur.push(d);
-    setup.liftDays = cur.length;
+    if(days.length >= 6) return { days, refused:'Six training days is the most Trainlog will write' };
+    days.push(d);
   }
-  setup.trainDows = cur.sort((a,b)=>a-b);
+  return { days: days.sort((a,b)=>a-b), refused:null };
+}
+function toggleTrainDow(d){
+  const r = nextTrainDows(trainDows(), d);
+  if(r.refused) return toast(r.refused);
+  setup.trainDows = r.days;
+  setup.liftDays = r.days.length;
   render();
 }
 /* Keep the day picker honest when the day count changes elsewhere. */
@@ -6139,18 +6145,14 @@ function scheduleNote(){
   return parts.join('; ') + '.';
 }
 function shuffleBank(){ state.seed = Math.floor(Math.random()*99999) + 1; render(); toast('Movements reshuffled'); }
-async function generateProgram(){
-  const model = GOAL_MODELS[primaryGoal()];
-  const hasCurrent = state.plan.length > 0;
-  /* Pressing the build button IS the confirmation. Asking again only earns its place when there
-     is something to lose — an existing program being filed away — so a first build goes straight
-     through to the finished thing. */
-  /* The dialog used the goal model's own label — "Build a new Muscle size program?" — which is not
-     a name anybody chose and reads as if the app has decided what the program is called. */
-  if(hasCurrent && !await askConfirm('Build a new program? Your current one and everything logged against it move to Program history — you can reopen it any time.')) return;
-  if(!await clearOpenForRebuild('Building a new program')) return;
-  archiveCurrent();
-  state.seed = Math.floor(Math.random() * 99999) + 1;   // a new program is a new draw
+/* Composing a program and announcing it were one function, which is why program generation
+   could not be tested or ported without a DOM. Only the shell is split off: archiving, saving,
+   navigating and the toast. Everything below is the original body in the original order —
+   including the mid-function writes to state.weeks, which buildStagesFor reads back through
+   weekCount(). Reordering those changes which program you get, so they stay exactly as they
+   were; handoff/systems-golden.json holds this to byte-identical output. */
+function composeProgram(seed){
+  state.seed = seed;
   const keys = splitFor(setup.liftDays), names = dayNames(keys), used = new Set();
   const newPlan = keys.map((k,di)=>({
     id: Date.now()+di, name: names[di],
@@ -6173,6 +6175,20 @@ async function generateProgram(){
   state.sched = buildSchedule(names, state.runVisible ? setup.runDays : 0, setup.runGoal, startDow(), trainDows());
   state.week = 1;
   state.startDate = setup.startDate || todayISO();
+  return state.plan;
+}
+async function generateProgram(){
+  const model = GOAL_MODELS[primaryGoal()];
+  const hasCurrent = state.plan.length > 0;
+  /* Pressing the build button IS the confirmation. Asking again only earns its place when there
+     is something to lose — an existing program being filed away — so a first build goes straight
+     through to the finished thing. */
+  /* The dialog used the goal model's own label — "Build a new Muscle size program?" — which is not
+     a name anybody chose and reads as if the app has decided what the program is called. */
+  if(hasCurrent && !await askConfirm('Build a new program? Your current one and everything logged against it move to Program history — you can reopen it any time.')) return;
+  if(!await clearOpenForRebuild('Building a new program')) return;
+  archiveCurrent();
+  composeProgram(Math.floor(Math.random() * 99999) + 1);   // a new program is a new draw
   await save(); go('today'); toast('New '+model.label+' program built');
 }
 /* Every build button routes through here. An exception inside an async handler goes nowhere —
