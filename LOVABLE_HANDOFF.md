@@ -128,7 +128,9 @@ import { judgeSession, decideLoad, decideReps, loadStep, speedCap,
 - `vetLoad` / `vetHold` / `vetPct` / `vetHistory` — the **safety envelope**.
   Call these on anything you are about to show a lifter. They reject runaway
   jumps, progression off a failed session, non-finite loads, percentages outside
-  the prescribable band, holds outside 20–120 s, and inflated 1RM estimates.
+  25–95 % 1RM, holds outside 15–120 s, and malformed history. (The envelope's
+  15 s floor is deliberately wider than the 20 s floor `holdSecs` prescribes at
+  — it is there to catch a rep count mislabelled as seconds.)
   Keep them wired in; they are the last line of defence in a rebuilt UI.
 
 ---
