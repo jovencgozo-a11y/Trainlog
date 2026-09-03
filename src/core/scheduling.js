@@ -1,0 +1,43 @@
+/** Weekday placement of lifts and runs, and the week view over it.
+ *  Re-exported from the shared engine so the declarations keep their original
+ *  order. Import this module for scheduling alone. */
+export { bindHost } from './engine.js';
+export {
+  DOW,
+  EFFORT_WORD,
+  LIFT_DOWS,
+  PACE_OFFSET,
+  RACE_OFFSET,
+  RUN_EXP,
+  RUN_GOALS,
+  RUN_SESSIONS,
+  SOFTEN,
+  buildSchedule,
+  defaultDows,
+  dowOf,
+  fmtSec,
+  isLowerDay,
+  levelType,
+  localISO,
+  mi2,
+  nextTrainDows,
+  paceFor,
+  phaseOf,
+  runExp,
+  runSegments,
+  runSession,
+  schCtx,
+  schedNow,
+  scheduleNote,
+  segLine,
+  segMiles,
+  segPace,
+  startDow,
+  suggestDayId,
+  todayISO,
+  totalMiles,
+  trainDows,
+  waveOf,
+  weekCount,
+  weekRows
+} from './engine.js';
