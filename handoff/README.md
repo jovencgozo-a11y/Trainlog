@@ -131,11 +131,22 @@ and restored in a `finally`, so nothing persists and the helpers that ran before
 the boundary still see the old values — which is what keeps the produced program
 identical.
 
-One dependency remains: `genTargets`, `primaryGoal` and `styleFor` still read
-the **global `setup`**, so calling `composeProgram` with an injected context on a
-machine whose global setup differs will take the block length and goal from the
-global for the first target pass. It does not affect the app, where the two are
-the same object. Parameterising `genTargets` is the next step.
+`genTargets`, `primaryGoal`, `goalsNow`, `styleFor`, `styleAllowed`, `waveSets`
+and `blockPhase` all take the context explicitly now, so the prescription follows
+the injected setup rather than the global one. Verified against a global setup
+deliberately set to conflict: with `setup` saying health/beginner/4 weeks and the
+context saying power/advanced/12 weeks, the produced program follows the context
+on day count, block length, week names, goal and the experience-driven RPE shift.
+
+One exception is kept on purpose: `styleFor` still derives its phase from
+`weekCount()` rather than from `genTargets`'s own `n`. In the original those two
+were allowed to differ, and unifying them changes which weeks carry a style cue.
+
+Still reading the global `setup`: the candidate-pool helpers `loadableFor`,
+`bandFinisherFor`, `compoundAvailable`, `betterPrimaryExists` and `injBlocked`
+filter on `setup.injuries`, so `ctx.injuries` does not yet affect movement
+selection — an injected context with a different injury list produces the same
+movements. Everything else in the context is honoured.
 
 The muscle-map slug tables stay behind: they are coupled to the SVG and the 3D
 figure.

@@ -2926,7 +2926,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
       (m.g || []).forEach(g=>isolated.add(g));
       const gk = goalForTier(m.tier, m.p);
       base.push({ name:m.n, note:m.note, goal:gk,
-        targets:genTargets(m.tier === 1 ? 4 : 3, gk, _total(), m.p, m.tier, d.dayIdx || 0, 0, loadKindOf(m), m.n) });
+        targets:genTargets(m.tier === 1 ? 4 : 3, gk, _total(), m.p, m.tier, d.dayIdx || 0, 0, loadKindOf(m), m.n, _s) });
     }
   }
   if(hasLoadable()){
@@ -3071,7 +3071,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
       chosen.add(mm ? mm.n : x.name);
       const sets = parseInt(String((x.targets || [])[0] || ''), 10) || (mm && mm.tier === 1 ? 4 : 3);
       const gk = mm ? goalForTier(mm.tier, mm.p) : (x.goal || primaryGoal());
-      const next = mm ? genTargets(sets, gk, _total(), mm.p, mm.tier, d.dayIdx || 0, st, loadKindOf(mm), mm.n) : null;
+      const next = mm ? genTargets(sets, gk, _total(), mm.p, mm.tier, d.dayIdx || 0, st, loadKindOf(mm), mm.n, _s) : null;
       return Object.assign({}, x,
         mm ? { name:mm.n, note:mm.note, goal:gk } : {},
         next && next.length ? { targets:next } : {});
@@ -3094,7 +3094,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
       if(!from || !to || progressionOK(from, to)) return x;
       const gk = from.goal || goalForTier(from.tier, from.p);
       const sets = parseInt(String((was.targets || [])[0] || ''), 10) || (from.tier === 1 ? 4 : 3);
-      const next = genTargets(sets, gk, _total(), from.p, from.tier, d.dayIdx || 0, s, loadKindOf(from), from.n);
+      const next = genTargets(sets, gk, _total(), from.p, from.tier, d.dayIdx || 0, s, loadKindOf(from), from.n, _s);
       return Object.assign({}, x, { name:from.n, note:from.note, goal:gk },
         next && next.length ? { targets:next } : {});
     });
@@ -4366,7 +4366,7 @@ function fillDayToTime(exercises, week, dayIdx, ctx){
     const gk = goalForTier(m.tier, m.p);
     const cap = _s.exp === 'beginner' ? 3 : _s.exp === 'advanced' ? 5 : 4;
     day.exercises.push({ name:m.n, note:m.note, goal:gk,
-      targets:genTargets(Math.min(cap, 3), gk, weekCount(), m.p, m.tier, dayIdx || 0, 0, loadKindOf(m), m.n) });
+      targets:genTargets(Math.min(cap, 3), gk, weekCount(), m.p, m.tier, dayIdx || 0, 0, loadKindOf(m), m.n, _s) });
   }
   /* Still short because the bank has nothing left for these muscles — add a set to the accessory
      work rather than leaving the session under length. */
@@ -4430,13 +4430,14 @@ const GOAL_BIAS = {
   power:{ up:['plyo_lower','plyo_upper','oly','carry'], w:.9 },
   health:{ up:['core_anti_rot','core_anti_ext','core_anti_lat','cuff','carry','tib','adductor','forearm'], w:.6 }
 };
-function goalsNow(){
-  const g = (setup.goals && setup.goals.length) ? setup.goals : [setup.goal || 'hypertrophy'];
+function goalsNow(ctx){
+  const _s = pgCtx(ctx);
+  const g = (_s.goals && _s.goals.length) ? _s.goals : [_s.goal || 'hypertrophy'];
   return g;
 }
 const GOAL_ORDER = ['power','strength','hypertrophy','health'];
-function primaryGoal(){
-  const g = goalsNow();
+function primaryGoal(ctx){
+  const g = goalsNow(ctx);
   return GOAL_ORDER.find(k=>g.indexOf(k) > -1) || g[0];
 }
 /* Which goal's rep scheme a given exercise should follow.
@@ -4693,11 +4694,12 @@ const setsAt = (ex, w) => { const m = String(tgt(ex, w)).match(/^(\d+)×/); retu
 const setsPeak = (ex, st) => Math.max.apply(null, stageWeeks(st).map(w=>setsAt(ex, w)));
 const peakWeek = st => stageWeeks(st)[stageWeeks(st).length - 1];
 const setsIn = ex => { const m = String((ex.targets || [])[0] || '').match(/^(\d+)×/); return m ? +m[1] : 0; };
-function reSets(ex, dayIdx, sets, stageIdx){
+function reSets(ex, dayIdx, sets, stageIdx, ctx){
+  const _s = pgCtx(ctx);
   const m = byName[ex.name];
   if(!m) return ex;
   const gk = ex.goal || goalForTier(m.tier, m.p);
-  const t = genTargets(sets, gk, weekCount(), m.p, m.tier, dayIdx || 0, stageIdx || 0, loadKindOf(m), m.n);
+  const t = genTargets(sets, gk, weekCount(), m.p, m.tier, dayIdx || 0, stageIdx || 0, loadKindOf(m), m.n, _s);
   return (t && t.length) ? Object.assign({}, ex, { targets:t }) : ex;
 }
 function governVolume(plan, ctx){
@@ -4772,7 +4774,7 @@ function governVolume(plan, ctx){
     }
     // write the decisions, one regeneration per changed movement
     items.forEach(o=>{
-      if(o.want !== o.s) o.list[o.ix] = reSets(o.ex, o.d.dayIdx, o.want, st);
+      if(o.want !== o.s) o.list[o.ix] = reSets(o.ex, o.d.dayIdx, o.want, st, _s);
     });
 
     // ── phase two: everything is at its floor and a muscle is still over
@@ -4822,13 +4824,14 @@ function governVolume(plan, ctx){
         .sort((a, b)=> (b.dm[over] - a.dm[over]) || (setsIn(b.ex) - setsIn(a.ex)));
       if(!shave.length) break;
       const sh = shave[0];
-      sh.list[sh.ix] = reSets(sh.ex, sh.d.dayIdx, setsIn(sh.ex) - 1, st);
+      sh.list[sh.ix] = reSets(sh.ex, sh.d.dayIdx, setsIn(sh.ex) - 1, st, _s);
     }
   }
-  fillDeficiencies(plan);
+  fillDeficiencies(plan, _s);
   return plan;
 }
-function fillDeficiencies(plan){
+function fillDeficiencies(plan, ctx){
+  const _s = pgCtx(ctx);
   if(!plan || plan.length < 3) return plan;
   const MAJOR = ['chest','back','shoulders','arms','quads','hamstrings','glutes'];
   const stages = Math.max(1, ...plan.map(d=>(d.stages || []).length));
@@ -4847,8 +4850,8 @@ function fillDeficiencies(plan){
       /* Something that trains it as its PRIMARY muscle, within kit, injuries and skill. */
       const eligible = allowBand => BANK.filter(m=>(m.g || [])[0] === g && !present.has(m.n) &&
           (allowBand || !isBandMove(m)) &&
-          equipPick(m).include && !(m.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
-          (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(m.skill || 2) - 1] > -50)
+          equipPick(m).include && !(m.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
+          (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(m.skill || 2) - 1] > -50)
         .sort((a, b)=>((a.tier || 2) - (b.tier || 2)) || ((a.skill || 2) - (b.skill || 2)));
       /* Bands are barred from being a staple of the programming, and that bar is right — but it
          was also barring the only arm work available on a minimal kit, leaving the biceps and
@@ -4866,7 +4869,7 @@ function fillDeficiencies(plan){
         const gk = goalForTier(cand.tier, cand.p);
         const item = { name:cand.n, note:cand.note, goal:gk,
           targets:genTargets(cand.tier === 1 ? 4 : 3, gk, weekCount(), cand.p, cand.tier,
-            target.dayIdx || 0, st, loadKindOf(cand), cand.n) };
+            target.dayIdx || 0, st, loadKindOf(cand), cand.n, _s) };
         const trimmed = fitDayToTime(listOf(target).concat([item]), peakWeek(st));
         if(!trimmed.some(x=>x.name === cand.n)) continue;      // the trim took it back off
         if(target.stages && target.stages[st]) target.stages[st] = trimmed;
@@ -4896,7 +4899,7 @@ function fillDeficiencies(plan){
           const next = list.slice();
           next[victim] = { name:cand.n, note:cand.note, goal:gk,
             targets:genTargets(cand.tier === 1 ? 4 : 3, gk, weekCount(), cand.p, cand.tier,
-              target.dayIdx || 0, st, loadKindOf(cand), cand.n) };
+              target.dayIdx || 0, st, loadKindOf(cand), cand.n, _s) };
           const fitted = fitDayToTime(next, peakWeek(st));
           if(target.stages && target.stages[st]) target.stages[st] = fitted;
           if(st === 0) target.exercises = fitted;
@@ -5099,11 +5102,12 @@ function repBandFor(goalKey, pattern, moveName){
 /* Waved loading, as your bank prescribes it: a main lift descends across its
    sets — 8/6/4 — climbing load as the reps drop, rather than repeating one number.
    Applied to compounds on strength-leaning blocks; accessories stay straight. */
-function waveSets(sets, reps, gk, pattern, tier){
+function waveSets(sets, reps, gk, pattern, tier, ctx){
+  const _s = pgCtx(ctx);
   if(tier > 1) return null;
   if(gk !== 'strength' && gk !== 'power' && gk !== 'hypertrophy') return null;
   if(HIGH_REP_PATTERNS[pattern]) return null;         // a 20-rep wave is not a wave
-  if((setup.exp || 'intermediate') === 'beginner') return null;   // one rep target to learn
+  if((_s.exp || 'intermediate') === 'beginner') return null;   // one rep target to learn
   const band = REP_RANGE[gk] || REP_RANGE.hypertrophy;
   const nums = String(reps).match(/\d+/g);
   if(!nums) return null;
@@ -5143,14 +5147,15 @@ const STYLE_LEVEL = {
   drop:'advanced', cluster:'advanced', amrap:'advanced'
 };
 const LEVEL_RANK = { beginner:0, intermediate:1, advanced:2 };
-function styleAllowed(key){
+function styleAllowed(key, ctx){
+  const _s = pgCtx(ctx);
   const need = LEVEL_RANK[STYLE_LEVEL[key] || 'intermediate'];
-  const have = LEVEL_RANK[setup.exp || (state.setup && state.setup.exp) || 'intermediate'];
+  const have = LEVEL_RANK[_s.exp || (state.setup && state.setup.exp) || 'intermediate'];
   return have >= need;
 }
-function styleFor(pattern, week, tier, off){
+function styleFor(pattern, week, tier, off, ctx, totalIn){
   if(!pattern) return '';
-  const n = weekCount(), ph = phaseOf(week, n);
+  const n = totalIn || weekCount(), ph = phaseOf(week, n);
   if(ph === 3) return '';                             // easy week is plain
   // accumulation weeks take stretch and tempo work; the harder week takes
   // range and density tricks; the heavy week keeps it clean and fast.
@@ -5161,7 +5166,7 @@ function styleFor(pattern, week, tier, off){
      identical cue in every stage — eight weeks of the same lift and the same instruction.
      Rotate through everything that fits the pattern instead, so when the movement cannot
      change the execution does. */
-  const fits = order.filter(k=>STYLES[k].for.test(pattern) && styleAllowed(k));
+  const fits = order.filter(k=>STYLES[k].for.test(pattern) && styleAllowed(k, ctx));
   if(!fits.length) return '';
   const pick = fits[((off || 0) % fits.length + fits.length) % fits.length];
   if(tier === 1 && pick === 'amrap') return '';       // not on a heavy compound
@@ -5196,10 +5201,10 @@ const BLOCK_SET_SHIFT = {
   strength:[0, 0, -1],
   power:[0, 0, -1]
 };
-function blockPhase(week, goalKey, total){
+function blockPhase(week, goalKey, total, ctx){
   const bi = blockIndex(week, total);
   const bp = BLOCK_PHASE[bi];
-  const row = BLOCK_SET_SHIFT[goalKey || primaryGoal()];
+  const row = BLOCK_SET_SHIFT[goalKey || primaryGoal(ctx)];
   return row ? Object.assign({}, bp, { setShift:row[bi] }) : bp;
 }
 /* A small muscle's band can be 15 reps wide. Prescribing the whole span — "×10–25"
@@ -5342,22 +5347,23 @@ function snapTarget(text, band, timedSecs){
     '×' + nums.split(/([–\/])/).map(part=>
       /^\d+$/.test(part) ? evenIn(+part, band) : part).join(''));
 }
-function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loadKind, moveName){
+function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loadKind, moveName, ctx){
+  const _s = pgCtx(ctx);
   const timedMove = isTimedMove(byName[moveName] || (moveName ? { n:moveName, p:pattern } : null));
-  const model = GOAL_MODELS[goalKey || primaryGoal()];
-  const shift = (EXP_ADJ[setup.exp] && EXP_ADJ[setup.exp].rpeShift) || 0;
-  const s = clampSets(sets, goalKey || primaryGoal()), n = total || setup.weeks || 4;
+  const model = GOAL_MODELS[goalKey || primaryGoal(ctx)];
+  const shift = (EXP_ADJ[_s.exp] && EXP_ADJ[_s.exp].rpeShift) || 0;
+  const s = clampSets(sets, goalKey || primaryGoal(ctx)), n = total || _s.weeks || 4;
   const out = [];
-  const gk = goalKey || primaryGoal();
+  const gk = goalKey || primaryGoal(ctx);
   const range = SET_RANGE[gk] || SET_RANGE.hypertrophy;
   for(let i = 1; i <= n; i++){
-    const ph = phaseOf(i, n), w = model.weeks[ph], bp = blockPhase(i, gk, n), bi = blockIndex(i, n);
+    const ph = phaseOf(i, n), w = model.weeks[ph], bp = blockPhase(i, gk, n, ctx), bi = blockIndex(i, n);
     const easy = ph === 3;                                 // the block's easy week
     /* The day's role applies to every movement on the day, not only the ones that carry it.
        Restricting it to the main lifts is why a heavy lower-body day and a volume lower-body day
        printed identical rep targets for their accessories — and lower-body accessories are most
        of a lower-body session. A heavy day is heavy from the first movement to the last. */
-    const du = (setup.liftDays || 3) > 1 ? dupFor(dayIdx, i, n) : null;
+    const du = (_s.liftDays || 3) > 1 ? dupFor(dayIdx, i, n) : null;
     /* One role per week, read once. The role was being consulted separately for the rep shift, the
        band window, the heavy cap and the printed label, and on one week of the block those reads
        disagreed — a session printed "heavy day" above a fourteen-rep target. Whatever the cause,
@@ -5387,7 +5393,11 @@ function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loa
       const nn = String(reps).match(/\d+/g) || [];
       if(nn.length === 2 && nn[0] === nn[1]) reps = '×' + nn[0];
     }
-    const style = easy ? '' : styleFor(pattern, i, tierIn || 1, styleOff);
+    /* styleFor keeps deriving its phase from weekCount(), not from genTargets' own n. In the
+       original the two were allowed to differ — genTargets took its n from the argument or
+       setup.weeks, styleFor from weekCount() — and unifying them changes which weeks get a
+       style cue. The context is still passed so styleAllowed follows it. */
+    const style = easy ? '' : styleFor(pattern, i, tierIn || 1, styleOff, ctx);
     /* Set growth across a block is capped at one. Later blocks were adding two sets to every
        movement, and because a base count already sits at its own floor the volume governor had
        nothing left to trim — the peak was pinned above the weekly ceiling no matter what it did,
@@ -5397,7 +5407,7 @@ function genTargets(sets, goalKey, total, pattern, tierIn, dayIdx, styleOff, loa
     const grow = Math.min(1, bp.setShift || 0);
     const sets = easy ? Math.max(range[0], s - 1)
       : Math.max(range[0], Math.min(range[1], s + grow));
-    const wave = easy ? null : waveSets(sets, reps, gk, pattern, tierIn || 2);
+    const wave = easy ? null : waveSets(sets, reps, gk, pattern, tierIn || 2, ctx);
     const repText = snapTarget(evenReps(wave ? '×' + wave : reps, band), band,
       timedMove ? holdSecs(gk, i, n, pattern) : 0);
     const role = duKey && duKey !== 'moderate' ? ' · ' + duKey + ' day' : '';
@@ -6202,7 +6212,7 @@ function composeProgram(seed, ctx){
   const keys = splitFor(_s.liftDays), names = dayNames(keys), used = new Set();
   const newPlan = keys.map((k,di)=>({
     id: Date.now()+di, name: names[di],
-    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s, seed).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
+    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s, seed).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n, _s), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
   }));
   const adaptations = { focus:_s.focus, emphasis:_s.emphasis.slice(), injuries:_s.injuries.slice(),
     equip:_s.equip, notes:adaptationNotes(_s) };
@@ -6219,7 +6229,7 @@ function composeProgram(seed, ctx){
     seed, plan:newPlan, dayId:newPlan[0].id, adaptations,
     setup: JSON.parse(JSON.stringify(_s)),
     weeks: weeksRaw,
-    weekNames: genWeekNames(primaryGoal(), weeksRaw, _s),
+    weekNames: genWeekNames(primaryGoal(_s), weeksRaw, _s),
     runVisible, runGoal:_s.runGoal, runPace:_s.runPace || 0, runExp:_s.runExp || 'some',
     sched: buildSchedule(names, runVisible ? _s.runDays : 0, _s.runGoal,
       startDow({ startDate:_s.startDate, today:todayISO() }),
