@@ -2747,9 +2747,10 @@ const BURNOUT_GROUPS = ['glutes','quads','hamstrings','calves'];
 /* Substitute across patterns when the pattern itself has no loadable option — a band triceps
    pressdown has no loadable same-pattern peer in the bank, and dropping it cost Push its only
    direct arm work and left the day three movements shorter than the others. */
-function loadableFor(m, inUse, seed){
+function loadableFor(m, inUse, seed, ctx){
+  const _s = pgCtx(ctx);
   const usable = x => !inUse.has(x.n) && !isBandMove(x) && equipPick(x).include &&
-    !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1);
+    !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1);
   const draw = (pool)=>{
     if(!pool.length) return null;
     pool.sort((a, b)=> (b.tier || 2) - (a.tier || 2));
@@ -2761,7 +2762,7 @@ function loadableFor(m, inUse, seed){
      shared by biceps, triceps and forearm. */
   const samePattern = draw(BANK.filter(x=>x.p === m.p && usable(x)));
   if(samePattern) return samePattern;
-  const alt = pickForSlot(m.p, seed, inUse, null, wantedGroups(), false);
+  const alt = pickForSlot(m.p, seed, inUse, null, wantedGroups(), false, _s);
   if(alt && !isBandMove(alt)) return alt;
   /* No loadable movement shares the pattern. Fall back on the muscle group, but prefer a
      candidate from the same pattern family so triceps work is replaced by triceps work. */
@@ -2769,26 +2770,28 @@ function loadableFor(m, inUse, seed){
   const byGroup = BANK.filter(x=>usable(x) && (x.g || []).some(g=>groups.indexOf(g) > -1));
   return draw(byGroup.filter(x=>String(x.p || '').split('_')[0] === fam)) || draw(byGroup);
 }
-function bandFinisherFor(list){
+function bandFinisherFor(list, ctx){
+  const _s = pgCtx(ctx);
   const have = new Set(list.map(x=>x.name));
   const trains = new Set();
   list.forEach(x=>{ const m = byName[x.name]; (m ? m.g : []).forEach(g=>trains.add(g)); });
   if(!BURNOUT_GROUPS.some(g=>trains.has(g))) return null;      // not a lower-body day
   const pool = BANK.filter(x=>
     !have.has(x.n) && isBandMove(x) && equipPick(x).include &&
-    !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
+    !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
     (x.g || []).some(g=>BURNOUT_GROUPS.indexOf(g) > -1));
   if(!pool.length) return null;
   const glute = pool.filter(x=>(x.g || []).indexOf('glutes') > -1);
   const pick = (glute.length ? glute : pool);
   return pick[Math.abs((genSeed() || 1) * 13 + list.length * 29) % pick.length];
 }
-function pairBandWork(list){
+function pairBandWork(list, ctx){
+  const _s = pgCtx(ctx);
   const kept = [], inUse = new Set(list.map(x=>x.name));
   list.forEach((item, idx)=>{
     const m = byName[item.name] || item;
     if(!isBandMove(m)){ kept.push(item); return; }
-    const alt = loadableFor(m, inUse, (genSeed() || 1) * 7 + idx * 97);
+    const alt = loadableFor(m, inUse, (genSeed() || 1) * 7 + idx * 97, _s);
     if(alt){ inUse.add(alt.n); kept.push(Object.assign({}, item, { name:alt.n, note:alt.note })); }
     /* Nothing loadable trains this at all under the current kit — leave the slot out rather
        than keep easy work in the middle of a session. */
@@ -2797,7 +2800,7 @@ function pairBandWork(list){
      kept before reading it wiped both. Hand it a copy — our kept is then never aliased. */
   const withPairs = pairAntagonists(kept.slice());
   kept.length = 0; withPairs.forEach(x=>kept.push(x));
-  const fin = bandFinisherFor(kept);
+  const fin = bandFinisherFor(kept, _s);
   if(fin){
     const label = (fin.g || []).indexOf('glutes') > -1 ? 'glutes' : 'legs';
     const m0 = byName[kept[kept.length - 1] && kept[kept.length - 1].name];
@@ -2816,35 +2819,37 @@ function pairBandWork(list){
    added, which a landmine press satisfies — so a tier-2 accessory kept the opening slot and every
    later stage inherited it. A primary slot is only satisfied by a compound when a compound is
    available for that pattern. */
-function compoundAvailable(m){
+function compoundAvailable(m, ctx){
+  const _s = pgCtx(ctx);
   if(!m) return false;
   return BANK.some(x=>x.p === m.p && (x.tier || 2) === 1 && equipPick(x).include &&
-    !(x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1) &&
-    (SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
+    !(x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1) &&
+    (SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] > -50 &&
     (!hasLoadable() || primaryOk(x)));
 }
 /* Anything usable for this pattern that is not a band. When injuries strip out every compound —
    knee and low back together remove every loaded hinge — the fallback must still be the most
    loadable movement left, not a band. A band opening a leg day is the weakest possible session. */
-function betterPrimaryExists(m){
+function betterPrimaryExists(m, ctx){
+  const _s = pgCtx(ctx);
   if(!m) return false;
   const mine = isBandMove(m) ? 0 : (m.tier || 2) === 1 ? 3 : 2;
   return BANK.some(x=>{
     if(x.p !== m.p || x.n === m.n) return false;
     if(!equipPick(x).include) return false;
-    if((x.x || []).some(k=>(setup.injuries || []).indexOf(k) > -1)) return false;
-    if((SKILL_PREF[setup.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] <= -50) return false;
+    if((x.x || []).some(k=>(_s.injuries || []).indexOf(k) > -1)) return false;
+    if((SKILL_PREF[_s.exp] || SKILL_PREF.intermediate)[(x.skill || 2) - 1] <= -50) return false;
     if(hasLoadable() && !primaryOk(x)) return false;
     const theirs = isBandMove(x) ? 0 : (x.tier || 2) === 1 ? 3 : 2;
     return theirs > mine;
   });
 }
-function primaryFit(m){
+function primaryFit(m, ctx){
   if(!m || !primaryOk(m)) return false;
   /* A band never satisfies a primary slot while anything loadable remains. */
-  if(isBandMove(m) && hasLoadable() && betterPrimaryExists(m)) return false;
+  if(isBandMove(m) && hasLoadable() && betterPrimaryExists(m, ctx)) return false;
   if((m.tier || 2) === 1) return true;
-  return !betterPrimaryExists(m);
+  return !betterPrimaryExists(m, ctx);
 }
 /* How well a movement can carry the front of a session: a loaded compound above a loaded
    accessory, both above bodyweight, and a band last. */
@@ -2855,9 +2860,9 @@ function primaryRank(m){
   if(!loadable) return 1;
   return (m.tier || 2) === 1 ? 4 : (m.tier || 2) === 2 ? 3 : 2;
 }
-function guardPrimaries(list){
+function guardPrimaries(list, ctx){
   for(let i = 0; i < Math.min(2, list.length); i++){
-    if(primaryFit(byName[list[i].name])) continue;
+    if(primaryFit(byName[list[i].name], ctx)) continue;
     /* Take the strongest movement left in the day rather than the first acceptable one — with
        every compound hinge filtered out by an injury, the difference is a band pull-through
        opening leg day versus a loaded single-leg movement that was already in it. */
@@ -2888,7 +2893,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
      before deriving anything: exactly one finisher is appended per day per rebuild. */
   const base = guardPrimaries(d.exercises
     .filter(x=>!(x.burnout && isBandMove(byName[x.name] || { n:x.name })))
-    .map(x=>{ const c = Object.assign({}, x); delete c.burnout; return c; }));
+    .map(x=>{ const c = Object.assign({}, x); delete c.burnout; return c; }), _s);
   /* Stages are derived from the stored exercise list, so a day an earlier version left short
      would stay short for good — a rebuild of stages is not a re-draw. Top it back up from the
      regions the day already trains, the same way buildDay finishes its own draw. */
@@ -2933,10 +2938,10 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
     const held = new Set(base.map(x=>x.name));
     base.slice(0, 2).forEach((x, i)=>{
       const m = byName[x.name];
-      if(!m || primaryFit(m)) return;
+      if(!m || primaryFit(m, _s)) return;
       held.delete(x.name);
-      const alt = pickForSlot(m.p, seedBase + i * 53, held, null, wantedGroups(), true);
-      if(alt && primaryFit(alt)){ base[i] = Object.assign({}, x, { name:alt.n, note:alt.note }); held.add(alt.n); }
+      const alt = pickForSlot(m.p, seedBase + i * 53, held, null, wantedGroups(), true, _s);
+      if(alt && primaryFit(alt, _s)){ base[i] = Object.assign({}, x, { name:alt.n, note:alt.note }); held.add(alt.n); }
       else held.add(x.name);
     });
   }
@@ -3030,7 +3035,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
     if(kitFor(from).some(k=>LOADABLE.indexOf(k) > -1) && !kitFor(to).some(k=>LOADABLE.indexOf(k) > -1)) return false;
     return true;
   };
-  d.stages = [pairBandWork(guardPrimaries(base.map(x=>Object.assign({}, x))))];
+  d.stages = [pairBandWork(guardPrimaries(base.map(x=>Object.assign({}, x)), _s), _s)];
   for(let st = 1; st < stageCount(); st++){
     /* One set per stage, shared across slots — rebuilding it per slot let two slots on the
        same pattern both take the winner, and the movement appeared twice. It holds the
@@ -3049,7 +3054,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
       let alt = chain.find(c=>!history[i].has(c.n) && !taken.has(c.n) &&
         progressionOK(m, c) && progressionOK(from, c)) || null;
       if(!alt){
-        const p = pickForSlot(m.p, seedBase + st * 911 + i * 37, taken, null, wantedGroups(), i < 2);
+        const p = pickForSlot(m.p, seedBase + st * 911 + i * 37, taken, null, wantedGroups(), i < 2, _s);
         if(p && !history[i].has(p.n) && progressionOK(m, p) && progressionOK(from, p)) alt = p;
       }
       const fit = !!alt;
@@ -3076,7 +3081,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
         mm ? { name:mm.n, note:mm.note, goal:gk } : {},
         next && next.length ? { targets:next } : {});
     });
-    d.stages.push(pairBandWork(guardPrimaries(list)));
+    d.stages.push(pairBandWork(guardPrimaries(list, _s), _s));
   }
   /* Enforce the progression invariant on the finished stages, not only at the moment a candidate
      is chosen. Selection is one of several paths that can set a slot's movement — the chain, the
@@ -3144,7 +3149,7 @@ function buildStagesFor(d, seedBase, ctx, totalIn){
   /* Guardrail: no stage may ship empty when the day had movements to begin with. Any transform
      above that returns nothing falls back to the base list rather than handing over a blank day. */
   if(base.length){
-    d.stages = d.stages.map(s => (s && s.length) ? s : guardPrimaries(base.map(x=>Object.assign({}, x))));
+    d.stages = d.stages.map(s => (s && s.length) ? s : guardPrimaries(base.map(x=>Object.assign({}, x)), _s));
   }
   d.exercises = d.stages[0];
 }
@@ -3968,7 +3973,7 @@ BANK.forEach(m=>{
   const extra = PATTERN_INJURY_X[m.p];
   if(extra) extra.forEach(k=>{ if(m.x.indexOf(k) < 0) m.x.push(k); });
 });
-const injBlocked = name => { const m = byName[name]; return m ? m.x.some(k=>setup.injuries.includes(k)) : false; };
+const injBlocked = (name, ctx) => { const m = byName[name], _s = pgCtx(ctx); return m ? m.x.some(k=>(_s.injuries || []).includes(k)) : false; };
 
 let setup = { goal:'hypertrophy', exp:'intermediate', sessionMax:60, liftDays:3, runDays:0, equip:'gym',
   goals:['hypertrophy'], startDate:null, trainDows:null, splitStyle:'auto', priorities:[], focus:'balanced', emphasis:[], injuries:[], runGoal:'none', runPace:0, weeks:4,
@@ -4925,7 +4930,7 @@ function buildDay(dayKey, dayIndex, used, ctx, seedIn){
     const isPow = /^plyo/.test(slot) || slot.indexOf('oly') === 0;
     const primary = isPow ? si < 2 : strengthSeen < 2;
     if(!isPow) strengthSeen++;
-    const m = pickForSlot(slot, seed + si*131, taken, repeated && si === 0 && dayIndex < 2 ? null : used, wanted, primary);
+    const m = pickForSlot(slot, seed + si*131, taken, repeated && si === 0 && dayIndex < 2 ? null : used, wanted, primary, _s);
     if(!m) return;
     taken.add(m.n); if(used) used.add(m.n);
     /* Set counts follow training age. A novice adapts to far less work than a trained lifter and
@@ -6212,7 +6217,7 @@ function composeProgram(seed, ctx){
   const keys = splitFor(_s.liftDays), names = dayNames(keys), used = new Set();
   const newPlan = keys.map((k,di)=>({
     id: Date.now()+di, name: names[di],
-    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s, seed).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n, _s), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
+    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s, seed).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n, _s), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1), _s)
   }));
   const adaptations = { focus:_s.focus, emphasis:_s.emphasis.slice(), injuries:_s.injuries.slice(),
     equip:_s.equip, notes:adaptationNotes(_s) };

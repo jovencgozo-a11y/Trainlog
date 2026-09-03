@@ -142,11 +142,18 @@ One exception is kept on purpose: `styleFor` still derives its phase from
 `weekCount()` rather than from `genTargets`'s own `n`. In the original those two
 were allowed to differ, and unifying them changes which weeks carry a style cue.
 
-Still reading the global `setup`: the candidate-pool helpers `loadableFor`,
-`bandFinisherFor`, `compoundAvailable`, `betterPrimaryExists` and `injBlocked`
-filter on `setup.injuries`, so `ctx.injuries` does not yet affect movement
-selection — an injected context with a different injury list produces the same
-movements. Everything else in the context is honoured.
+`ctx.injuries` now controls movement selection too. The candidate-pool helpers
+`loadableFor`, `bandFinisherFor`, `compoundAvailable`, `betterPrimaryExists` and
+`injBlocked` take the context, as do `pairBandWork`, `primaryFit` and
+`guardPrimaries` on the way to them — and `buildDay` now passes its context to
+`pickForSlot`, which was the actual leak: the filter was already parameterised
+but the argument was never handed over.
+
+Verified both ways. Same seed and context, `injuries: []` vs `['knee']`: four
+knee-flagged movements selected, then none. With the global saying
+`['knee','shoulder']` and the context saying `[]`, the flagged movements are used
+— the context wins; with the global empty and the context `['knee']`, they are
+dropped.
 
 The muscle-map slug tables stay behind: they are coupled to the SVG and the 3D
 figure.
