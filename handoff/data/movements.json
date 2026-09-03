@@ -1,0 +1,4959 @@
+[
+ {
+  "n": "Barbell Bench Press",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "wrist"
+  ],
+  "note": "Primary horizontal press — the load ceiling for chest mass",
+  "skill": 2,
+  "kit": [
+   "barbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "DB Bench Press",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "wrist"
+  ],
+  "note": "Freer shoulder path than the bar, deeper stretch",
+  "skill": 2,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Neutral-Grip DB Floor Press",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "wrist"
+  ],
+  "note": "Limited range — the shoulder-friendly press",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Machine Chest Press",
+  "p": "hpress",
+  "g": [
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "wrist"
+  ],
+  "note": "Stable path, easy to push close to failure",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Push-up Variation",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Feet on a step or hands on books to keep it hard",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Weighted Dip",
+  "p": "dip",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "elbow",
+   "wrist"
+  ],
+  "note": "Lower chest and triceps in a deep stretch",
+  "skill": 3,
+  "kit": [
+   "dipbars"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Chair or Step Dip",
+  "p": "dip",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "shoulder",
+   "elbow",
+   "wrist"
+  ],
+  "note": "Hands on a chair edge, heels on the floor",
+  "skill": 2,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Incline Barbell Press",
+  "p": "ipress",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Upper chest under a barbell load",
+  "skill": 2,
+  "kit": [
+   "barbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Incline DB Press",
+  "p": "ipress",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [],
+  "note": "Upper-chest bias; the DB path is shoulder-friendly",
+  "skill": 2,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Low-Incline DB Press",
+  "p": "ipress",
+  "g": [
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Between flat and incline — clavicular fibres",
+  "skill": 2,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Landmine Press",
+  "p": "ipress",
+  "g": [
+   "shoulders",
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Angled press that most shoulders tolerate",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Standing Overhead Press",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "lowback",
+   "neck"
+  ],
+  "note": "Whole-body vertical press",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Seated DB Shoulder Press",
+  "p": "vpress",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Delt hypertrophy with a supported spine",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Half-Kneeling DB Press",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Vertical press that demands trunk control",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Machine Shoulder Press",
+  "p": "vpress",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Fixed path — safe to take near failure",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Z-Press",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "shoulder",
+   "lowback",
+   "neck"
+  ],
+  "note": "Seated on the floor — no leg drive to hide behind",
+  "skill": 3,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Push Press",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Triple extension into a vertical press",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Cable Fly",
+  "p": "chest_iso",
+  "g": [
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Loads the chest in the lengthened position",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Pec Deck",
+  "p": "chest_iso",
+  "g": [
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Constant tension through the arc",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "DB Fly",
+  "p": "chest_iso",
+  "g": [
+   "chest"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Stretch-biased chest isolation",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Cable Crossover",
+  "p": "chest_iso",
+  "g": [
+   "chest"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Upper-chest fibres at peak contraction",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Weighted Pull-up",
+  "p": "vpull",
+  "g": [
+   "back",
+   "arms"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "Primary vertical pull — lat width",
+  "skill": 2,
+  "kit": [
+   "pullupbar"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Lat Pulldown",
+  "p": "vpull",
+  "g": [
+   "back"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [],
+  "note": "A scalable vertical pull you can grind",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Neutral-Grip Chin-up",
+  "p": "vpull",
+  "g": [
+   "back",
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "Elbow-friendly grip, more biceps",
+  "skill": 2,
+  "kit": [
+   "pullupbar"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Band Pulldown",
+  "p": "vpull",
+  "g": [
+   "back"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Vertical pull without a cable stack",
+  "skill": 1,
+  "kit": [
+   "cable",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Straight-Arm Pulldown",
+  "p": "pullover",
+  "g": [
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Isolates the lats through a full arc",
+  "skill": 2,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "DB Pullover",
+  "p": "pullover",
+  "g": [
+   "back",
+   "chest"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Lats in a deep overhead stretch",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Barbell Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback"
+  ],
+  "note": "The heaviest horizontal pull — costs low back",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Chest-Supported Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [],
+  "note": "Mid-back thickness with zero low-back load",
+  "skill": 1,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Single-Arm DB Row",
+  "p": "hpull",
+  "g": [
+   "back",
+   "core"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [],
+  "note": "Unilateral lat work plus anti-rotation",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Seated Cable Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Constant tension, easy to control",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Inverted Row",
+  "p": "hpull",
+  "g": [
+   "back",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Bodyweight horizontal pull, scaled by angle",
+  "skill": 1,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Meadows Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback"
+  ],
+  "note": "Landmine row — a strong stretch on the lat",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Machine Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "A stable path for high-volume back work",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Cable Lateral Raise",
+  "p": "delt_side",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Medial delt under constant tension",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "DB Lateral Raise",
+  "p": "delt_side",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Shoulder width — high reps, no swinging",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Lean-Away Lateral Raise",
+  "p": "delt_side",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Lateral work in the lengthened position",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Face Pull",
+  "p": "delt_rear",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Rear delt, external rotators, lower traps",
+  "skill": 2,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Rear-Delt Fly",
+  "p": "delt_rear",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Posterior delt volume",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Reverse Pec Deck",
+  "p": "delt_rear",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Rear delt with a fixed, stable path",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Band Pull-Apart",
+  "p": "delt_rear",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Scapular health, endless reps",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band External Rotation",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Cuff strength through a pain-free arc",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Prone Y-T-W",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Scapular control and lower traps",
+  "skill": 1,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Incline DB Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "Biceps long head in a stretched position",
+  "skill": 2,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Barbell or EZ Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "The heaviest biceps loading",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Hammer Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [],
+  "note": "Brachialis and brachioradialis for thickness",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Cable Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Constant tension top to bottom",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Preacher Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "No swing — pure short-head work",
+  "skill": 2,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Reverse Curl",
+  "p": "forearm",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "wrist"
+  ],
+  "note": "Forearm extensors and elbow tendon health",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Wrist Extensor Eccentrics",
+  "p": "forearm",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Slow lowers — the standard tendon protocol",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Overhead Cable Triceps Ext",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Long head trained stretched",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Overhead DB Triceps Ext",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "The same stretch with one dumbbell",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Triceps Pressdown",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Lateral head; easy to accumulate volume",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Skull Crusher",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Heavy long-head work — watch the elbows",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Close-Grip Bench Press",
+  "p": "tri",
+  "g": [
+   "arms",
+   "chest"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Compound triceps loading",
+  "skill": 2,
+  "kit": [
+   "barbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Band Pressdown",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Home triceps volume",
+  "skill": 1,
+  "kit": [
+   "cable",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Back Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Primary bilateral quad and glute compound",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Front Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "core"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "More upright — quad-dominant, core-taxing",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Hack Squat",
+  "p": "squat",
+  "g": [
+   "quads"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Quad overload with the spine supported",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Safety-Bar Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "lowback",
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Kinder to the shoulders than a straight bar",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Belt Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "The squat pattern with no spinal load",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Goblet Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Upright torso, knee-friendly, teaches depth",
+  "skill": 1,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Conventional Deadlift",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "back"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "A maximal pull through the whole posterior chain",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Trap Bar Deadlift",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "quads"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "hip"
+  ],
+  "note": "A spine-friendlier bar path",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Romanian Deadlift",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "Hamstrings loaded in the stretch",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Single-Leg RDL",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes",
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hamstring",
+   "hip"
+  ],
+  "note": "Unilateral hinge with a balance demand",
+  "skill": 3,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Good Morning",
+  "p": "hinge",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "A heavy hip hinge — load it conservatively",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "45° Back Extension",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Hip extension in a short, safe range",
+  "skill": 2,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Kettlebell Swing",
+  "p": "hinge",
+  "g": [
+   "glutes",
+   "hamstrings"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "A ballistic hinge — power and conditioning",
+  "skill": 2,
+  "kit": [
+   "kettlebell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Bulgarian Split Squat",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 1,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Unilateral quad and glute; exposes asymmetry",
+  "skill": 3,
+  "kit": [
+   "dumbbell",
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Walking Lunge",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Long-stride unilateral work",
+  "skill": 2,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Reverse Lunge",
+  "p": "lunge",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Less knee shear than lunging forward",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "DB Step-Up",
+  "p": "lunge",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Single-leg strength and balance",
+  "skill": 1,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Split Squat",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Stable unilateral loading, rear foot down",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Lateral Step-Down",
+  "p": "lunge",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Eccentric knee control — patellofemoral health",
+  "skill": 2,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Leg Press",
+  "p": "legpress",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "High quad volume with the spine supported",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Leg Extension",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee"
+  ],
+  "note": "Quad isolation to a hard last rep",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Spanish Squat",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "A banded isometric — tendon-friendly",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Sissy Squat",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee"
+  ],
+  "note": "Rectus femoris under a deep stretch",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Wall Sit",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Isometric quad work with no joint speed",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Lying Leg Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hamstring"
+  ],
+  "note": "Knee-flexion hamstring work",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Seated Leg Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hamstring"
+  ],
+  "note": "Hamstrings in a lengthened position",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Nordic Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hamstring"
+  ],
+  "note": "Eccentric hamstring strength, no equipment",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Slider Leg Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Heels on towels or socks on a smooth floor",
+  "skill": 1,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Slow-Eccentric Leg Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Four-second lowering — rebuilds tolerance",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Barbell Hip Thrust",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Peak-contraction glute loading",
+  "skill": 2,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "DB Hip Thrust",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "The same pattern with a dumbbell",
+  "skill": 2,
+  "kit": [
+   "barbell",
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Cable Kickback",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Glute max in isolation",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Hip Abduction",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Glute medius — hip stability",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Frog Pump",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "A high-rep glute finisher",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Copenhagen Plank",
+  "p": "adductor",
+  "g": [
+   "core",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Adductor strength — groin-injury prevention",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Cossack Squat",
+  "p": "adductor",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee",
+   "hip"
+  ],
+  "note": "Loaded lateral range through the adductors",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Adductor Machine",
+  "p": "adductor",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Direct adductor loading",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Standing Calf Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "ankle",
+   "foot"
+  ],
+  "note": "Gastrocnemius through a full range",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Seated Calf Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "ankle",
+   "foot"
+  ],
+  "note": "Soleus, with the knee bent",
+  "skill": 1,
+  "kit": [
+   "machines"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Single-Leg Calf Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "ankle",
+   "foot"
+  ],
+  "note": "Unilateral Achilles capacity",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Heavy Slow Calf Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "ankle",
+   "foot"
+  ],
+  "note": "Heavy slow resistance — the tendon protocol",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Tibialis Raise",
+  "p": "tib",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "ankle"
+  ],
+  "note": "Shin health and deceleration",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Pallof Press",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Anti-rotation — the trunk resists",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Cable Woodchop",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback"
+  ],
+  "note": "Rotational control under load",
+  "skill": 1,
+  "kit": [
+   "cable"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "machine"
+ },
+ {
+  "n": "Bird Dog",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Contralateral stability and coordination",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Dead Bug",
+  "p": "core_anti_ext",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Anti-extension with a neutral spine",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Plank",
+  "p": "core_anti_ext",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Anti-extension endurance",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Ab Wheel Rollout",
+  "p": "core_anti_ext",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback",
+   "wrist"
+  ],
+  "note": "Hard anti-extension",
+  "skill": 3,
+  "kit": [
+   "abwheel"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Hanging Leg Raise",
+  "p": "core_flex",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "neck"
+  ],
+  "note": "Anterior core on a long lever",
+  "skill": 2,
+  "kit": [
+   "pullupbar"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Side Plank",
+  "p": "core_anti_lat",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Anti-lateral-flexion; glute med and QL",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Suitcase Carry",
+  "p": "carry",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "neck"
+  ],
+  "note": "Anti-lateral-flexion plus grip",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Farmer Carry",
+  "p": "carry",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "neck"
+  ],
+  "note": "Trunk stiffness, grip, total-body tension",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Trap Bar Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "knee",
+   "achilles",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "A loaded jump — high rate of force development",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Broad Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "achilles",
+   "hamstring",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Horizontal power; teaches landing",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Box Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "achilles",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Concentric power with a soft landing",
+  "skill": 2,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Pogo Hops",
+  "p": "plyo_lower",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "achilles",
+   "knee",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Reactive ankle stiffness — elastic recoil",
+  "skill": 2,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Depth Drop",
+  "p": "plyo_lower",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee",
+   "achilles",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Landing mechanics under gravity",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Med-Ball Chest Throw",
+  "p": "plyo_upper",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder",
+   "wrist"
+  ],
+  "note": "Upper-body RFD with no deceleration",
+  "skill": 2,
+  "kit": [
+   "medball"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Med-Ball Rotational Throw",
+  "p": "plyo_upper",
+  "g": [
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "lowback",
+   "wrist"
+  ],
+  "note": "Rotational power through hips and trunk",
+  "skill": 3,
+  "kit": [
+   "medball"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Med-Ball Slam",
+  "p": "plyo_upper",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback",
+   "wrist"
+  ],
+  "note": "Full-body extension into flexion",
+  "skill": 3,
+  "kit": [
+   "medball"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Hang Power Clean",
+  "p": "oly",
+  "g": [
+   "back",
+   "quads"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "shoulder",
+   "ankle",
+   "hip",
+   "neck",
+   "wrist"
+  ],
+  "note": "Explosive triple extension under a bar",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "free"
+ },
+ {
+  "n": "Band Chest Press",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Anchored band press — tension peaks at lockout",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Archer Push-up",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Shifts most of the load onto one arm",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Decline Push-up",
+  "p": "ipress",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Feet on a step — biases the upper chest",
+  "skill": 2,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Incline Press",
+  "p": "ipress",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Band anchored low, pressing up and away",
+  "skill": 1,
+  "kit": [
+   "bench",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Fly",
+  "p": "chest_iso",
+  "g": [
+   "chest"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "shoulder"
+  ],
+  "note": "Chest isolation with the band behind you",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Pike Push-up",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Bodyweight vertical press — hips high",
+  "skill": 2,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Elevated Pike Push-up",
+  "p": "vpress",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Feet on a step for a steeper press angle",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Overhead Press",
+  "p": "vpress",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Stand on the band and press overhead",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Row",
+  "p": "hpull",
+  "g": [
+   "back"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Anchored band row — squeeze and hold",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Single-Arm Band Row",
+  "p": "hpull",
+  "g": [
+   "back",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Unilateral pull with an anti-rotation demand",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Table Row",
+  "p": "hpull",
+  "g": [
+   "back",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Lie under a sturdy table and row your chest to the edge",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Lateral Raise",
+  "p": "delt_side",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Stand on the band — tension builds as you raise",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Rear-Delt Fly",
+  "p": "delt_rear",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Rear delts with the band anchored in front",
+  "skill": 1,
+  "kit": [
+   "dumbbell",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Stand on the band; slow on the way down",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Hammer Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [],
+  "note": "Neutral grip — brachialis and forearm",
+  "skill": 1,
+  "kit": [
+   "dumbbell",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Overhead Triceps Ext",
+  "p": "tri",
+  "g": [
+   "arms"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Band behind you, elbows high and still",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Bodyweight Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Slow tempo and a pause to make it count",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Band over the shoulders, standing on it",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Step-Up",
+  "p": "lunge",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Stairs or a sturdy chair — drive through the top foot",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Skater Hop",
+  "p": "lunge",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee",
+   "achilles",
+   "ankle",
+   "hip"
+  ],
+  "note": "Lateral bound, stick the landing",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Good Morning",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "Band over the shoulders, hips travel back",
+  "skill": 1,
+  "kit": [
+   "barbell",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Pull-Through",
+  "p": "hinge",
+  "g": [
+   "glutes",
+   "hamstrings"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Band between the legs — hinge and snap the hips",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Prone Back Extension",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Face down on the floor, lift the chest and legs",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Single-Leg Glute Bridge",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "One foot on the floor, hips level throughout",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Hip Thrust",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Shoulders on a chair, band across the hips",
+  "skill": 1,
+  "kit": [
+   "barbell",
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Banded Hip Abduction",
+  "p": "glute",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Loop above the knees — glute medius",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Stair Calf Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "ankle",
+   "foot"
+  ],
+  "note": "Heels off the step for a full stretch",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Woodchop",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Rotational control against the band",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Hollow Hold",
+  "p": "core_anti_ext",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Lower back pressed flat — hold the shape",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Reverse Crunch",
+  "p": "core_flex",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "neck"
+  ],
+  "note": "Knees to chest, no swinging",
+  "skill": 1,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Clap Push-up",
+  "p": "plyo_upper",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "shoulder",
+   "wrist"
+  ],
+  "note": "Explosive push-up — leave the floor",
+  "skill": 3,
+  "kit": [],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band Speed Press",
+  "p": "plyo_upper",
+  "g": [
+   "chest",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Light band, maximum intent on every rep",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "Band-Resisted March",
+  "p": "carry",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "neck"
+  ],
+  "note": "Band at the waist, march tall and slow",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": null,
+  "kitSet": null,
+  "eq": "home"
+ },
+ {
+  "n": "1/2 Kneel Hamstring Curl",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Half-kneeling heel drag — hamstring control in a stable base",
+  "skill": 2,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "mobkit"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "1/2 Kneel Windmills",
+  "p": "mob_t",
+  "g": [
+   "core",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Thoracic rotation with shoulder and hip stability",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "1/2 Kneeling Lateral Flexion",
+  "p": "mob_t",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "QL and lateral trunk chain through side-bend",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "1/2 Kneeling Open Books",
+  "p": "mob_t",
+  "g": [
+   "core",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Wall-supported thoracic rotation",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "1/2 Kneeling Thoracic Rotation",
+  "p": "mob_t",
+  "g": [
+   "core",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Rotation into the wall with scapular control",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "3-Way Lunge Sliders",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Multiplanar hip and quad control on a slider",
+  "skill": 3,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "mobkit"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "3-Way Calf Stretch",
+  "p": "mob_ankle",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Gastroc, soleus and posterior ankle in three positions",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "90/90 Hip ER",
+  "p": "mob_hip",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Hip external rotation and capsule",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "90/90 Hip IR to ER",
+  "p": "mob_hip",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Windshield-wiper rotation, both directions",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "90/90 Shin Box",
+  "p": "mob_hip",
+  "g": [
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Hip rotation plus a get-up to tall kneeling",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Adductor Hip Hinge",
+  "p": "adductor",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hamstring",
+   "hip"
+  ],
+  "note": "Inner-thigh length inside a hinge",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Ankle DF Mobilization",
+  "p": "mob_ankle",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Band glide restoring ankle dorsiflexion",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Arch Doming",
+  "p": "foot",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Short-foot drill for the medial arch",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Assisted SL Heel Raise",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "achilles",
+   "ankle",
+   "foot"
+  ],
+  "note": "Single-leg calf raise with hands assisting the way up",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Banded Snow Angels",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Scapular upward rotation under band tension",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Banded Wrist Pronation",
+  "p": "forearm",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Pronation work for the tennis-elbow tendons",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Bosu Plank",
+  "p": "core_anti_ext",
+  "g": [
+   "core",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "wrist"
+  ],
+  "note": "Anti-extension plank on an unstable surface",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "free"
+ },
+ {
+  "n": "Bow and Arrow w/ Serratus Press",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Serratus punch on one side, bowstring pull on the other",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Captain Morgan",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Single-leg squat with the opposite knee pressing a wall",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Cervical SNAG",
+  "p": "neck",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Self-glide with active cervical rotation",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Chaos Bird Dog",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Bird dog with a band adding perturbation",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Curtsey Lunge",
+  "p": "lunge",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Crossing lunge for glute med and frontal-plane control",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Dead Bug Isometric",
+  "p": "core_anti_ext",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "wrist"
+  ],
+  "note": "Held dead-bug position — lumbopelvic control",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Dead Hang",
+  "p": "vpull",
+  "g": [
+   "back",
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Shoulder decompression and grip endurance",
+  "skill": 1,
+  "kit": [
+   "pullupbar"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "pullupbar"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Depth Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes",
+   "calves"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "knee",
+   "achilles",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Step off, land, rebound immediately — advanced reactive work",
+  "skill": 3,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "bench"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Drop Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Absorb the landing quietly in an athletic position",
+  "skill": 3,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "bench"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Dynamic Stretching",
+  "p": "mob_gen",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Active range through leg swings, lunges and arm circles",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Eccentric Hip Flexion",
+  "p": "hipflex",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Slow lowering of the raised thigh against resistance",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Elbow CARs",
+  "p": "mob_gen",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Controlled elbow and forearm rotations for joint health",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Elevated Pigeon Stretch",
+  "p": "mob_hip",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Figure-4 on a bench, hinging forward",
+  "skill": 1,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bench"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "ER Walkouts",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Hold external rotation while stepping away from the anchor",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Front-Foot-Elevated Split Squat",
+  "p": "lunge",
+  "g": [
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Quad-biased split squat through a deeper knee range",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Figure 4 Rotations",
+  "p": "mob_hip",
+  "g": [
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Hook-lying figure-4 rotated side to side",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Foam Roller Angels",
+  "p": "mob_t",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Overhead reach, T and snow angel along a roller",
+  "skill": 1,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "mobkit"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Forearm Roller",
+  "p": "forearm",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "elbow",
+   "wrist"
+  ],
+  "note": "Wrist roller up and down under control",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "free"
+ },
+ {
+  "n": "Frog Stretch on Sliders",
+  "p": "mob_hip",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Knees wide, rocking the hips back on sliders",
+  "skill": 1,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "mobkit"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Hamstring Isometric w/ Ball",
+  "p": "ham_iso",
+  "g": [
+   "hamstrings",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hamstring"
+  ],
+  "note": "Bridge with the heel digging into a ball",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Heel-Elevated Wall Squat",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee"
+  ],
+  "note": "Heels raised, held at about sixty degrees",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Hip Airplane",
+  "p": "hiprot",
+  "g": [
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Single-leg rotational control over the stance hip",
+  "skill": 3,
+  "kit": [],
+  "skillSet": 3,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Hip CARs",
+  "p": "mob_hip",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Full-range hip circles under tension",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Jefferson Curl",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "back"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "lowback",
+   "hamstring",
+   "hip"
+  ],
+  "note": "Segmental spinal flexion under light load — progress slowly",
+  "skill": 3,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "dumbbell"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "KB Deadlift",
+  "p": "hinge",
+  "g": [
+   "hamstrings",
+   "glutes",
+   "back"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "lowback",
+   "hip"
+  ],
+  "note": "Hinge to the bell between the feet, hips drive through",
+  "skill": 2,
+  "kit": [
+   "kettlebell"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "kettlebell"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Knee Extension Isometric",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee"
+  ],
+  "note": "Held knee extension for the patellar tendon",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Lateral Bounding",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Bound side to side, sticking each landing",
+  "skill": 3,
+  "kit": [],
+  "skillSet": 3,
+  "kitSet": [],
+  "eq": "free"
+ },
+ {
+  "n": "Lateral Lunge Sliders",
+  "p": "adductor",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Slide out into a lateral lunge and pull back",
+  "skill": 2,
+  "kit": [
+   "mobkit"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "mobkit"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Lateral Weight Shift w/ Ball",
+  "p": "balance",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle"
+  ],
+  "note": "Frontal-plane loading with a med-ball reach",
+  "skill": 2,
+  "kit": [
+   "medball"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "medball"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Lumbar Extension",
+  "p": "mob_gen",
+  "g": [
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Prone press-ups into lumbar extension",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Monster Walk",
+  "p": "hipabd",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Banded diagonal steps holding tension and alignment",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Open Books",
+  "p": "mob_t",
+  "g": [
+   "core",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Side-lying rotation, chest opening to the ceiling",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Overhead Lat Stretch",
+  "p": "mob_gen",
+  "g": [
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Hang off an anchor and sink the hips back",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Overhead Squat",
+  "p": "squat",
+  "g": [
+   "quads",
+   "shoulders",
+   "core"
+  ],
+  "tier": 1,
+  "home": false,
+  "x": [
+   "shoulder",
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Bar overhead through a full squat — a mobility test as much as a lift",
+  "skill": 3,
+  "kit": [
+   "barbell"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "barbell"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Overhead Carry",
+  "p": "carry",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "shoulder",
+   "neck"
+  ],
+  "note": "Load locked out overhead, braced and tall",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "dumbbell"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "PAILs and RAILs",
+  "p": "mob_gen",
+  "g": [
+   "glutes",
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Push into the stretch, then pull deeper into range",
+  "skill": 3,
+  "kit": [],
+  "skillSet": 3,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Pallof Walkout",
+  "p": "core_anti_rot",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Step away from the anchor while resisting rotation",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Plantarflexion Isometric",
+  "p": "calf",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "achilles",
+   "ankle",
+   "foot"
+  ],
+  "note": "Held heel raise for Achilles loading",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Prone Snow Angels",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Face-down snow angel, thumbs up, arms off the floor",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Prone Swimmers",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [],
+  "note": "Retract, hover, then sweep the arms overhead",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "free"
+ },
+ {
+  "n": "Pull-Apart with External Rotation",
+  "p": "cuff",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Band pulled apart finishing in external rotation",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Push-Up with Rotation",
+  "p": "hpress",
+  "g": [
+   "chest",
+   "core"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "shoulder",
+   "lowback",
+   "wrist"
+  ],
+  "note": "Push-up rotating into a side plank each rep",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Quad Burners",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee"
+  ],
+  "note": "Weight fixed on one leg while the other taps front and back",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Quadruped Chin Tuck",
+  "p": "neck",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Deep neck flexor endurance against gravity",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Rotator Cuff Isometrics",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Held presses into a wall or band in each direction",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Reverse Nordic Curl",
+  "p": "quad_iso",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "knee"
+  ],
+  "note": "Tall kneeling, leaning back with the hips extended",
+  "skill": 3,
+  "kit": [],
+  "skillSet": 3,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "RFE Fire Hydrant",
+  "p": "hipabd",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "hip"
+  ],
+  "note": "Quadruped hydrant with the rear foot elevated",
+  "skill": 2,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bench"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Scapular CARs",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Slow scapular circles through the full range",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Scapular Clock",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Protract, then move the hand up, out and down",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Seated Hip Flexion",
+  "p": "hipflex",
+  "g": [
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Lift the thigh off the chair above ninety degrees",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Seated Thoracic Extension",
+  "p": "mob_t",
+  "g": [
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Extend the upper back over a chair or roller",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Servers",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Rotate out, then press to full extension like carrying a tray",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Shoulder ER at Elevation",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Elbow to shoulder height holding external rotation",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Shoulder IR at Elevation",
+  "p": "cuff",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "The internal-rotation mirror, elbow at shoulder height",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Thoracic-Bias Shoulder Press",
+  "p": "vpress",
+  "g": [
+   "shoulders",
+   "arms"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "neck"
+  ],
+  "note": "Overhead press cueing thoracic extension, not rib flare",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "dumbbell"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Side-Lying Hip IR",
+  "p": "hiprot",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Rotate the top-leg foot into hip internal rotation",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Side Plank w/ Clamshell",
+  "p": "core_anti_lat",
+  "g": [
+   "core",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Open the top knee while the hips stay lifted",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Side Plank w/ Rotation",
+  "p": "core_anti_lat",
+  "g": [
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Thread the top arm under, then open to the ceiling",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Side Plank w/ Row",
+  "p": "core_anti_lat",
+  "g": [
+   "core",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Row a band from a side plank without dropping the hips",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Banded Side Steps",
+  "p": "hipabd",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Lateral walk holding band tension and level hips",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Single-Leg Balance w/ Rotation",
+  "p": "balance",
+  "g": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "ankle"
+  ],
+  "note": "Balance on one leg and rotate the trunk across the body",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Snap Down",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Snap into an athletic quarter-squat and stick it",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Split Squat w/ Heel Raise",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "calves"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Split squat finishing on the front toes",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Split Stance D2 Flexion",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Band under the front foot, arm driving a D2 diagonal",
+  "skill": 2,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Squat Jump",
+  "p": "plyo_lower",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Countermovement into a maximal jump, land soft",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Standing A",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Arms low and back, thumbs out, scapulae squeezed",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Standing T",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Arms out to a T, thumbs up, retracting the scapulae",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Standing W",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Elbows bent, retracting and externally rotating",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Step Overs",
+  "p": "mob_hip",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Step up and over an obstacle with control",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Straight-Arm Pull-Apart",
+  "p": "delt_rear",
+  "g": [
+   "shoulders",
+   "back"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Straight arms pulling the band out to a T",
+  "skill": 1,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 1,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Surfer Squat",
+  "p": "hiprot",
+  "g": [
+   "glutes",
+   "quads"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "knee",
+   "hip"
+  ],
+  "note": "Hold a squat and rotate ninety degrees against a band",
+  "skill": 3,
+  "kit": [
+   "bands"
+  ],
+  "skillSet": 3,
+  "kitSet": [
+   "bands"
+  ],
+  "eq": "home"
+ },
+ {
+  "n": "Tall Kneeling Hip IR",
+  "p": "hiprot",
+  "g": [
+   "glutes"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "hip"
+  ],
+  "note": "Rotate one hip inward from tall kneeling",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Toe Dissociation",
+  "p": "foot",
+  "g": [
+   "calves"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Big toe down, others up — then reverse",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Transverse Step Up",
+  "p": "lunge",
+  "g": [
+   "quads",
+   "glutes"
+  ],
+  "tier": 2,
+  "home": false,
+  "x": [
+   "knee",
+   "ankle",
+   "hip"
+  ],
+  "note": "Step up while turning ninety degrees",
+  "skill": 2,
+  "kit": [
+   "bench"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "bench"
+  ],
+  "eq": "free"
+ },
+ {
+  "n": "Tree Matrix",
+  "p": "balance",
+  "g": [
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [
+   "ankle"
+  ],
+  "note": "Pendulum reaches on one leg through all three planes",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Triple Extension",
+  "p": "plyo_lower",
+  "g": [
+   "glutes",
+   "quads",
+   "calves"
+  ],
+  "tier": 2,
+  "home": true,
+  "x": [
+   "ankle",
+   "hip",
+   "foot"
+  ],
+  "note": "Explosive ankle, knee and hip extension together",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Wall Angel",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Goalpost arms sliding up a wall with the back flat",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Wall Slides",
+  "p": "scap",
+  "g": [
+   "shoulders"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "W to Y up the wall, keeping contact",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "World's Greatest Stretch",
+  "p": "mob_gen",
+  "g": [
+   "glutes",
+   "core"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Deep lunge, elbow to instep, then rotate open",
+  "skill": 2,
+  "kit": [],
+  "skillSet": 2,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Serratus Push-Up",
+  "p": "scap",
+  "g": [
+   "shoulders",
+   "chest"
+  ],
+  "tier": 3,
+  "home": true,
+  "x": [],
+  "note": "Protract and retract with the elbows locked",
+  "skill": 1,
+  "kit": [],
+  "skillSet": 1,
+  "kitSet": [],
+  "eq": "home"
+ },
+ {
+  "n": "Zottman Curl",
+  "p": "bi",
+  "g": [
+   "arms"
+  ],
+  "tier": 3,
+  "home": false,
+  "x": [
+   "elbow"
+  ],
+  "note": "Curl supinated, lower pronated and slow",
+  "skill": 2,
+  "kit": [
+   "dumbbell"
+  ],
+  "skillSet": 2,
+  "kitSet": [
+   "dumbbell"
+  ],
+  "eq": "free"
+ }
+]

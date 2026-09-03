@@ -1,0 +1,139 @@
+{
+ "none": {
+  "label": "Not running",
+  "blurb": "Lifting only",
+  "mix": []
+ },
+ "maintain": {
+  "label": "Stay aerobically fit",
+  "blurb": "Keeps your engine without denting your lifting",
+  "mix": [
+   "easy",
+   "long",
+   "recovery",
+   "strides",
+   "easy2",
+   "tempo"
+  ]
+ },
+ "speed": {
+  "label": "Get faster",
+  "blurb": "Short, sharp intervals and strides",
+  "mix": [
+   "speed",
+   "easy",
+   "strides",
+   "recovery",
+   "tempo",
+   "easy2"
+  ]
+ },
+ "vo2": {
+  "label": "Build VO2 max",
+  "blurb": "Hard, repeatable repeats of three to five minutes",
+  "mix": [
+   "vo2",
+   "easy",
+   "tempo",
+   "recovery",
+   "easy2",
+   "strides"
+  ]
+ },
+ "endurance": {
+  "label": "Build distance",
+  "blurb": "A progressive long run on an easy base",
+  "mix": [
+   "long",
+   "easy",
+   "easy2",
+   "recovery",
+   "tempo",
+   "strides"
+  ]
+ },
+ "race5k": {
+  "label": "Race a 5K",
+  "blurb": "VO2 repeats plus goal-pace work",
+  "mix": [
+   "vo2",
+   "easy",
+   "racepace",
+   "recovery",
+   "easy2",
+   "long"
+  ],
+  "longMi": [
+   4,
+   4.5,
+   5,
+   3
+  ]
+ },
+ "race10k": {
+  "label": "Race a 10K",
+  "blurb": "Tempo and threshold work",
+  "mix": [
+   "tempo",
+   "easy",
+   "vo2",
+   "recovery",
+   "long",
+   "easy2"
+  ],
+  "longMi": [
+   5,
+   6,
+   7,
+   4
+  ]
+ },
+ "racehalf": {
+  "label": "Race a half marathon",
+  "blurb": "Long runs and sustained tempo",
+  "mix": [
+   "long",
+   "easy",
+   "tempo",
+   "recovery",
+   "racepace",
+   "easy2"
+  ],
+  "longMi": [
+   7,
+   8,
+   10,
+   5.5
+  ]
+ },
+ "racemarathon": {
+  "label": "Race a marathon",
+  "blurb": "Volume first — everything else easy",
+  "mix": [
+   "long",
+   "easy",
+   "easy2",
+   "recovery",
+   "racepace",
+   "tempo"
+  ],
+  "longMi": [
+   10,
+   12,
+   14,
+   7
+  ]
+ },
+ "hills": {
+  "label": "Build hill strength",
+  "blurb": "Uphill repeats — running's heavy set",
+  "mix": [
+   "hills",
+   "easy",
+   "strides",
+   "recovery",
+   "long",
+   "easy2"
+  ]
+ }
+}

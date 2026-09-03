@@ -1,0 +1,118 @@
+{
+ "hypertrophy": {
+  "label": "Muscle size",
+  "weeks": [
+   {
+    "name": "Build-up",
+    "rpe": 7,
+    "reps": "×10–12",
+    "note": ""
+   },
+   {
+    "name": "Short rests",
+    "rpe": 8,
+    "reps": "×12",
+    "note": ""
+   },
+   {
+    "name": "Heavier",
+    "rpe": 8,
+    "reps": "×8–10",
+    "note": ""
+   },
+   {
+    "name": "Easy week",
+    "rpe": "RPE 5–6",
+    "reps": "×10",
+    "note": "stop well short of hard"
+   }
+  ]
+ },
+ "strength": {
+  "label": "Strength",
+  "weeks": [
+   {
+    "name": "Base",
+    "rpe": 7,
+    "reps": "×6",
+    "note": ""
+   },
+   {
+    "name": "Heavy",
+    "rpe": 8,
+    "reps": "×4",
+    "note": "heavy"
+   },
+   {
+    "name": "Heaviest",
+    "rpe": 9,
+    "reps": "×3",
+    "note": "your hardest sets"
+   },
+   {
+    "name": "Easy week",
+    "rpe": "RPE 5",
+    "reps": "×5",
+    "note": "light and quick"
+   }
+  ]
+ },
+ "health": {
+  "label": "Health & resilience",
+  "weeks": [
+   {
+    "name": "Foundation",
+    "rpe": 6,
+    "reps": "×10",
+    "note": "move slowly and in control"
+   },
+   {
+    "name": "Stamina",
+    "rpe": 7,
+    "reps": "×12–15",
+    "note": ""
+   },
+   {
+    "name": "Slow tempo",
+    "rpe": 7,
+    "reps": "×12",
+    "note": "take 3s to lower each rep"
+   },
+   {
+    "name": "Easy week",
+    "rpe": "RPE 5",
+    "reps": "×10",
+    "note": "easy"
+   }
+  ]
+ },
+ "power": {
+  "label": "Speed & power",
+  "weeks": [
+   {
+    "name": "Base",
+    "rpe": 7,
+    "reps": "×5",
+    "note": "controlled"
+   },
+   {
+    "name": "Heavy",
+    "rpe": 8,
+    "reps": "×3–5",
+    "note": "heavy"
+   },
+   {
+    "name": "Explosive",
+    "rpe": 7,
+    "reps": "×3–5",
+    "note": "move as fast as you can"
+   },
+   {
+    "name": "Easy week",
+    "rpe": "RPE 5–6",
+    "reps": "×3",
+    "note": "fast and fresh, very light"
+   }
+  ]
+ }
+}

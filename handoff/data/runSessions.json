@@ -1,0 +1,153 @@
+{
+ "easy": {
+  "label": "Easy",
+  "hard": 0,
+  "legs": 1,
+  "base": [
+   3,
+   3.5,
+   4,
+   2.5
+  ]
+ },
+ "easy2": {
+  "label": "Easy",
+  "hard": 0,
+  "legs": 1,
+  "base": [
+   2.5,
+   3,
+   3,
+   2
+  ]
+ },
+ "recovery": {
+  "label": "Recovery",
+  "hard": 0,
+  "legs": 0,
+  "base": [
+   2,
+   2.5,
+   2.5,
+   2
+  ]
+ },
+ "long": {
+  "label": "Long",
+  "hard": 1,
+  "legs": 3,
+  "base": [
+   5,
+   6,
+   7,
+   4
+  ]
+ },
+ "strides": {
+  "label": "Strides",
+  "hard": 0,
+  "legs": 1,
+  "base": [
+   2.5,
+   3,
+   3,
+   2
+  ],
+  "reps": [
+   6,
+   6,
+   8,
+   4
+  ]
+ },
+ "tempo": {
+  "label": "Tempo",
+  "hard": 2,
+  "legs": 2,
+  "reps": [
+   1,
+   1,
+   2,
+   1
+  ],
+  "work": [
+   2.5,
+   3,
+   1.75,
+   1.75
+  ],
+  "rest": "3 min jog"
+ },
+ "racepace": {
+  "label": "Race pace",
+  "hard": 2,
+  "legs": 2,
+  "reps": [
+   3,
+   4,
+   2,
+   2
+  ],
+  "work": [
+   1,
+   1,
+   2,
+   1
+  ],
+  "rest": "2 min jog"
+ },
+ "hills": {
+  "label": "Hills",
+  "hard": 2,
+  "legs": 3,
+  "reps": [
+   8,
+   10,
+   8,
+   6
+  ],
+  "secs": [
+   45,
+   45,
+   90,
+   30
+  ],
+  "rest": "jog down"
+ },
+ "vo2": {
+  "label": "VO2 max",
+  "hard": 3,
+  "legs": 3,
+  "reps": [
+   5,
+   4,
+   5,
+   3
+  ],
+  "metres": [
+   800,
+   1000,
+   1000,
+   800
+  ],
+  "rest": "jog for as long as the rep took (1:1)"
+ },
+ "speed": {
+  "label": "Speed",
+  "hard": 3,
+  "legs": 3,
+  "reps": [
+   8,
+   6,
+   10,
+   6
+  ],
+  "metres": [
+   200,
+   400,
+   400,
+   200
+  ],
+  "rest": "full recovery — about 5× the rep"
+ }
+}

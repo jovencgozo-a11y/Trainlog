@@ -1,0 +1,50 @@
+{
+ "barbell": {
+  "label": "Barbell & rack",
+  "re": {}
+ },
+ "dumbbell": {
+  "label": "Dumbbells",
+  "re": {}
+ },
+ "kettlebell": {
+  "label": "Kettlebells",
+  "re": {}
+ },
+ "bench": {
+  "label": "Bench",
+  "re": {}
+ },
+ "pullupbar": {
+  "label": "Pull-up bar",
+  "re": {}
+ },
+ "cable": {
+  "label": "Cables",
+  "re": {}
+ },
+ "machines": {
+  "label": "Machines",
+  "re": null
+ },
+ "bands": {
+  "label": "Bands",
+  "re": {}
+ },
+ "medball": {
+  "label": "Med ball",
+  "re": {}
+ },
+ "mobkit": {
+  "label": "Roller & sliders",
+  "re": {}
+ },
+ "dipbars": {
+  "label": "Dip bars & belt",
+  "re": {}
+ },
+ "abwheel": {
+  "label": "Ab wheel",
+  "re": {}
+ }
+}

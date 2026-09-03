@@ -1,0 +1,770 @@
+{
+ "football": {
+  "label": "American Football",
+  "goals": [
+   "power",
+   "strength",
+   "hypertrophy"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "core",
+   "back"
+  ],
+  "run": "speed",
+  "why": "Repeated collision and short sprints — force production and mass, with the posterior chain and trunk bracing carrying it."
+ },
+ "soccer": {
+  "label": "Soccer",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "quads",
+   "calves"
+  ],
+  "run": "vo2",
+  "why": "Repeated sprints over 90 minutes. Hamstring and groin work is the priority — they are the sport's two most common injuries."
+ },
+ "basketball": {
+  "label": "Basketball",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "calves"
+  ],
+  "run": "speed",
+  "why": "Jumping and decelerating. Landing mechanics and calf-to-knee tissue tolerance take precedence over top-end strength."
+ },
+ "baseball": {
+  "label": "Baseball",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "core",
+   "back"
+  ],
+  "run": "maintain",
+  "why": "Rotational velocity off one leg. Cuff and scapular work is protective, not optional, and trunk rotation is the transfer."
+ },
+ "softball": {
+  "label": "Softball",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "core",
+   "back"
+  ],
+  "run": "maintain",
+  "why": "As baseball — rotational power with the shoulder complex kept resilient under a heavy throwing load."
+ },
+ "volleyball": {
+  "label": "Volleyball",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "quads",
+   "shoulders",
+   "calves"
+  ],
+  "run": "speed",
+  "why": "Repeated jumping and overhead hitting. Jump capacity plus shoulder tolerance for a very high overhead volume."
+ },
+ "swimming": {
+  "label": "Swimming",
+  "goals": [
+   "health",
+   "power"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "back",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Enormous overhead volume with little ground contact. Scapular and cuff strength protect the shoulder; the trunk holds the line."
+ },
+ "tennis": {
+  "label": "Tennis",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "core",
+   "quads"
+  ],
+  "run": "maintain",
+  "why": "Rotational and overhead under repeated change of direction. Shoulder, trunk and single-leg control together."
+ },
+ "track": {
+  "label": "Track & Field",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "quads",
+   "calves"
+  ],
+  "run": "speed",
+  "why": "Rate of force development. Heavy compound work paired with jumps, kept well short of fatigue."
+ },
+ "wrestling": {
+  "label": "Wrestling",
+  "goals": [
+   "strength",
+   "power",
+   "health"
+  ],
+  "focus": "upper",
+  "prio": [
+   "back",
+   "core",
+   "glutes"
+  ],
+  "run": "maintain",
+  "why": "Strength at awkward angles under continuous fatigue. Grip, trunk and posterior chain, with hard conditioning."
+ },
+ "lacrosse": {
+  "label": "Lacrosse",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "core",
+   "shoulders"
+  ],
+  "run": "vo2",
+  "why": "Sprinting and cutting with a rotational throw. Posterior chain and trunk, plus repeat-sprint conditioning."
+ },
+ "golf": {
+  "label": "Golf",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "glutes",
+   "shoulders"
+  ],
+  "run": "maintain",
+  "why": "One rotational effort repeated precisely. Hip mobility and trunk control protect the low back, which is golf's injury."
+ },
+ "surfing": {
+  "label": "Surfing",
+  "goals": [
+   "health",
+   "power"
+  ],
+  "focus": "upper",
+  "prio": [
+   "back",
+   "shoulders",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Paddling endurance, an explosive pop-up, and constant trunk correction on an unstable base."
+ },
+ "cycling": {
+  "label": "Cycling",
+  "goals": [
+   "health",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Sustained one-legged force with no impact. Lifting exists to raise the ceiling and protect a rounded posture."
+ },
+ "hockey": {
+  "label": "Ice Hockey",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "quads",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Skating is lateral hip extension. Adductor and glute work protect the groin, which is hockey's most common injury."
+ },
+ "fieldhockey": {
+  "label": "Field Hockey",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "core",
+   "back"
+  ],
+  "run": "vo2",
+  "why": "Repeated sprints in a flexed posture. Posterior chain and trunk extension to offset the stick position."
+ },
+ "gymnastics": {
+  "label": "Gymnastics",
+  "goals": [
+   "strength",
+   "power"
+  ],
+  "focus": "upper",
+  "prio": [
+   "shoulders",
+   "core",
+   "arms"
+  ],
+  "run": "maintain",
+  "why": "Relative strength and control through extreme range. Bodyweight mastery before external load."
+ },
+ "boxing": {
+  "label": "Boxing",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "shoulders",
+   "calves"
+  ],
+  "run": "vo2",
+  "why": "Rotational punching power over rounds. Trunk rotation, shoulder endurance and legs that keep moving."
+ },
+ "mma": {
+  "label": "MMA",
+  "goals": [
+   "strength",
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "back",
+   "glutes"
+  ],
+  "run": "vo2",
+  "why": "Every quality at once under fatigue. Strength held, power expressed, conditioning across all three energy systems."
+ },
+ "martialarts": {
+  "label": "Martial Arts",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "glutes",
+   "calves"
+  ],
+  "run": "maintain",
+  "why": "Explosive striking and kicking from a stable base, with the hip mobility the kicks require."
+ },
+ "waterpolo": {
+  "label": "Water Polo",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "core",
+   "back"
+  ],
+  "run": "maintain",
+  "why": "Throwing and wrestling while treading. Shoulder durability under a very high overhead volume."
+ },
+ "xc": {
+  "label": "Cross Country",
+  "goals": [
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "calves",
+   "core"
+  ],
+  "run": "race10k",
+  "why": "Aerobic capacity first. Lifting is low-volume and heavy to improve economy and tolerate mileage."
+ },
+ "beachvb": {
+  "label": "Beach Volleyball",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "quads",
+   "shoulders",
+   "core"
+  ],
+  "run": "speed",
+  "why": "Jumping from sand doubles the demand on the calf and hip; overhead volume stays high."
+ },
+ "badminton": {
+  "label": "Badminton",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "calves",
+   "quads",
+   "shoulders"
+  ],
+  "run": "speed",
+  "why": "Repeated lunging and overhead reach. Ankle and knee deceleration with shoulder tolerance."
+ },
+ "pickleball": {
+  "label": "Pickleball",
+  "goals": [
+   "health",
+   "power"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Short lateral movement and quick stops. Knee and hip control matter more than top-end output."
+ },
+ "cheer": {
+  "label": "Cheerleading",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "upper",
+  "prio": [
+   "shoulders",
+   "core",
+   "glutes"
+  ],
+  "run": "maintain",
+  "why": "Overhead stabilising under load, tumbling power, and landings that must be controlled every time."
+ },
+ "diving": {
+  "label": "Diving",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "quads",
+   "shoulders"
+  ],
+  "run": "maintain",
+  "why": "Explosive take-off with total trunk control in the air, and shoulders that tolerate entry."
+ },
+ "rowing": {
+  "label": "Rowing",
+  "goals": [
+   "strength",
+   "health"
+  ],
+  "focus": "back",
+  "prio": [
+   "back",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Repeated maximal leg drive through the trunk. Low back and posterior chain are the priority and the risk."
+ },
+ "skateboarding": {
+  "label": "Skateboarding",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "calves",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Repeated impact absorption on one leg with ankle and knee tolerance for awkward landings."
+ },
+ "snowboarding": {
+  "label": "Snowboarding",
+  "goals": [
+   "strength",
+   "power"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Sustained isometric leg strength with rotational control and hard eccentric landings."
+ },
+ "skiing": {
+  "label": "Alpine Skiing",
+  "goals": [
+   "strength",
+   "power"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Long eccentric and isometric quad work. Knee integrity is the whole game — the ACL is the sport's injury."
+ },
+ "rugby": {
+  "label": "Rugby",
+  "goals": [
+   "strength",
+   "power",
+   "hypertrophy"
+  ],
+  "focus": "upper",
+  "prio": [
+   "back",
+   "glutes",
+   "core"
+  ],
+  "run": "vo2",
+  "why": "Collision plus 80 minutes of running. Mass and strength held under a heavy aerobic load."
+ },
+ "ultimate": {
+  "label": "Ultimate Frisbee",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "quads",
+   "core"
+  ],
+  "run": "vo2",
+  "why": "Repeated sprints, cuts and layouts. Hamstring and knee resilience with real aerobic depth."
+ },
+ "triathlon": {
+  "label": "Triathlon",
+  "goals": [
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "core",
+   "shoulders"
+  ],
+  "run": "endurance",
+  "why": "Three aerobic disciplines. Lifting is minimal, heavy and infrequent — enough to hold tissue, never enough to interfere."
+ },
+ "weightlifting": {
+  "label": "Weightlifting",
+  "goals": [
+   "strength",
+   "power"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "back",
+   "shoulders"
+  ],
+  "run": null,
+  "why": "Maximal strength expressed at speed overhead. Squat and pull strength with overhead position tolerance."
+ },
+ "powerlifting": {
+  "label": "Powerlifting",
+  "goals": [
+   "strength",
+   "hypertrophy"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "back",
+   "chest"
+  ],
+  "run": null,
+  "why": "Three lifts, maximal load. Everything else exists to support squat, bench and deadlift."
+ },
+ "crossfit": {
+  "label": "CrossFit",
+  "goals": [
+   "strength",
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "back",
+   "core",
+   "shoulders"
+  ],
+  "run": "race10k",
+  "why": "Broad capacity across every quality. Strength kept honest while conditioning stays high."
+ },
+ "fencing": {
+  "label": "Fencing",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Explosive single-leg lunging repeated for hours, with the trailing hip taking an unusual load."
+ },
+ "archery": {
+  "label": "Archery",
+  "goals": [
+   "health",
+   "strength"
+  ],
+  "focus": "back",
+  "prio": [
+   "back",
+   "shoulders",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Sustained isometric draw. Scapular endurance and postural strength, both sides trained evenly."
+ },
+ "bowling": {
+  "label": "Bowling",
+  "goals": [
+   "health",
+   "strength"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "shoulders",
+   "glutes"
+  ],
+  "run": "maintain",
+  "why": "A one-sided repeated swing and slide. Trunk control and hip stability keep the low back out of it."
+ },
+ "equestrian": {
+  "label": "Equestrian",
+  "goals": [
+   "health",
+   "strength"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "glutes",
+   "back"
+  ],
+  "run": "maintain",
+  "why": "Continuous trunk and hip stabilising in a flexed position, with adductor endurance."
+ },
+ "figureskating": {
+  "label": "Figure Skating",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "speed",
+  "why": "Single-leg jump take-off and landing, rotational control, and a high hip mobility requirement."
+ },
+ "trackcycling": {
+  "label": "Track Cycling",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "glutes",
+   "core"
+  ],
+  "run": "speed",
+  "why": "Short maximal efforts. Squat and hip-extension strength translate closely to standing-start power."
+ },
+ "bmx": {
+  "label": "BMX",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "lower",
+  "prio": [
+   "quads",
+   "core",
+   "shoulders"
+  ],
+  "run": "speed",
+  "why": "A maximal standing start plus repeated impact absorption through arms and legs."
+ },
+ "climbing": {
+  "label": "Rock Climbing",
+  "goals": [
+   "strength",
+   "health"
+  ],
+  "focus": "back",
+  "prio": [
+   "back",
+   "arms",
+   "core"
+  ],
+  "run": "maintain",
+  "why": "Relative pulling strength and grip endurance. Pressing and lower-body work balance a very pull-dominant sport."
+ },
+ "flagfootball": {
+  "label": "Flag Football",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "lower",
+  "prio": [
+   "glutes",
+   "quads",
+   "core"
+  ],
+  "run": "vo2",
+  "why": "Sprinting and cutting without collision. Hamstring resilience and repeat-sprint capacity."
+ },
+ "handball": {
+  "label": "Handball",
+  "goals": [
+   "power",
+   "strength"
+  ],
+  "focus": "shoulders",
+  "prio": [
+   "shoulders",
+   "glutes",
+   "core"
+  ],
+  "run": "speed",
+  "why": "Jumping and overhead throwing with contact. Shoulder durability alongside lower-body power."
+ },
+ "kickboxing": {
+  "label": "Kickboxing",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "glutes",
+   "calves"
+  ],
+  "run": "vo2",
+  "why": "Striking with the legs and hands over rounds. Rotational power, hip mobility and conditioning."
+ },
+ "muaythai": {
+  "label": "Muay Thai",
+  "goals": [
+   "power",
+   "health"
+  ],
+  "focus": "core",
+  "prio": [
+   "core",
+   "glutes",
+   "calves"
+  ],
+  "run": "vo2",
+  "why": "Clinch strength and repeated kicking. Trunk, hip and calf tissue tolerance under heavy volume."
+ },
+ "judo": {
+  "label": "Judo",
+  "goals": [
+   "strength",
+   "power"
+  ],
+  "focus": "back",
+  "prio": [
+   "back",
+   "core",
+   "glutes"
+  ],
+  "run": "maintain",
+  "why": "Gripping and throwing from awkward positions. Pulling strength, grip and trunk above all."
+ },
+ "bjj": {
+  "label": "Brazilian Jiu-Jitsu",
+  "goals": [
+   "strength",
+   "health"
+  ],
+  "focus": "back",
+  "prio": [
+   "back",
+   "core",
+   "glutes"
+  ],
+  "run": "maintain",
+  "why": "Isometric strength under fatigue with a large hip mobility requirement. Neck and grip need care."
+ }
+}

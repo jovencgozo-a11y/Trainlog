@@ -1,0 +1,39 @@
+{
+ "chest": {
+  "label": "Chest",
+  "re": {}
+ },
+ "back": {
+  "label": "Back",
+  "re": {}
+ },
+ "shoulders": {
+  "label": "Shoulders",
+  "re": {}
+ },
+ "arms": {
+  "label": "Arms",
+  "re": {},
+  "not": {}
+ },
+ "quads": {
+  "label": "Quads",
+  "re": {}
+ },
+ "hamstrings": {
+  "label": "Hamstrings",
+  "re": {}
+ },
+ "glutes": {
+  "label": "Glutes",
+  "re": {}
+ },
+ "calves": {
+  "label": "Calves",
+  "re": {}
+ },
+ "core": {
+  "label": "Core",
+  "re": {}
+ }
+}

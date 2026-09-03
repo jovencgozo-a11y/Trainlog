@@ -1,0 +1,49 @@
+{
+ "gym": {
+  "label": "Full gym",
+  "kit": [
+   "barbell",
+   "dumbbell",
+   "kettlebell",
+   "bench",
+   "pullupbar",
+   "cable",
+   "machines",
+   "bands",
+   "medball",
+   "mobkit",
+   "dipbars",
+   "abwheel"
+  ]
+ },
+ "free": {
+  "label": "Free weights",
+  "kit": [
+   "barbell",
+   "dumbbell",
+   "kettlebell",
+   "bench",
+   "pullupbar",
+   "bands",
+   "mobkit",
+   "dipbars",
+   "abwheel"
+  ]
+ },
+ "minimal": {
+  "label": "Dumbbells only",
+  "kit": [
+   "dumbbell",
+   "bench",
+   "bands",
+   "mobkit"
+  ]
+ },
+ "home": {
+  "label": "Bands & bodyweight",
+  "kit": [
+   "bands",
+   "mobkit"
+  ]
+ }
+}
