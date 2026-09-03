@@ -115,12 +115,27 @@ globals, which is what every existing call site does, so behaviour is unchanged;
 passing one drives the system with no global reads at all. Verified by emptying
 `state` and `setup` and running all four purely from injected context.
 
-The one remaining coupling is that `composeProgram` still *writes* its result
-into `state` (plan, seed, weeks, sched and the rest). That is deliberate:
-`buildDay`, `pickForSlot` and `buildStagesFor` read `state.seed` and
-`state.weeks` back mid-build, so returning a plain object instead changes which
-program comes out. Returning rather than writing is the last step, and it needs
-those three reads parameterised first.
+`composeProgram(seed, ctx)` now **returns** the finished program as a plain
+object — plan, seed, weeks, weekNames, sched, adaptations, setup, startDate —
+and writes nothing. `applyProgram(result)` is the shell that puts it into
+`state`, and `generateProgram` is the DOM wrapper that archives, applies, saves
+and navigates. Verified with every relevant global emptied: the returned program
+is complete and correct, `state` and `ui` are byte-identical before and after,
+and the same seed and context produce the same program twice.
+
+The block length and draw seed used to be published by writing `state.weeks` and
+`state.seed` partway through the build, where `stageWeeks`, `setsPeak`, `reSets`
+and the seeded movement pickers read them back. They are now carried in two
+compose-scoped variables set at exactly the points those writes used to happen
+and restored in a `finally`, so nothing persists and the helpers that ran before
+the boundary still see the old values — which is what keeps the produced program
+identical.
+
+One dependency remains: `genTargets`, `primaryGoal` and `styleFor` still read
+the **global `setup`**, so calling `composeProgram` with an injected context on a
+machine whose global setup differs will take the block length and goal from the
+global for the first target pass. It does not affect the app, where the two are
+the same object. Parameterising `genTargets` is the next step.
 
 The muscle-map slug tables stay behind: they are coupled to the SVG and the 3D
 figure.

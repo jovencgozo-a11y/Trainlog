@@ -2438,7 +2438,19 @@ function stripLoad(str){
   s = s.replace(/\b\d+(?:\.\d+)?\s*(?:lb|kg)\b\s*/gi,'');
   return s.replace(/^\s*[+·-]\s*/,'').trim();
 }
-function weekCount(){ return Math.max(4, Math.min(12, state.weeks || (state.weekNames ? state.weekNames.length : 4))); }
+/* composeProgram used to publish its block length by writing state.weeks partway through, and
+   a wide set of helpers — stageWeeks, setsPeak, reSets, fillDeficiencies — read it back through
+   weekCount(). It now returns its result instead of writing, so the length is carried here for
+   the duration of the build only: set at exactly the point the write used to happen, restored
+   in a finally. Nothing persists, and the helpers that ran BEFORE that write still see the old
+   value, which is what keeps the produced program identical. */
+let _composeWeeks = null;
+/* Same treatment for the draw seed. composeProgram used to publish it by writing state.seed on
+   its first line; the seeded movement pickers below read it back. It is carried here for the
+   build only and restored afterwards, so nothing persists. */
+let _composeSeed = null;
+const genSeed = () => (_composeSeed != null ? _composeSeed : state.seed);
+function weekCount(){ return Math.max(4, Math.min(12, _composeWeeks || state.weeks || (state.weekNames ? state.weekNames.length : 4))); }
 function phaseOf(week, total){          // the 4-week wave repeats; the final week is always a deload
   const n = total || weekCount();
   if(week >= n) return 3;
@@ -2769,14 +2781,14 @@ function bandFinisherFor(list){
   if(!pool.length) return null;
   const glute = pool.filter(x=>(x.g || []).indexOf('glutes') > -1);
   const pick = (glute.length ? glute : pool);
-  return pick[Math.abs((state.seed || 1) * 13 + list.length * 29) % pick.length];
+  return pick[Math.abs((genSeed() || 1) * 13 + list.length * 29) % pick.length];
 }
 function pairBandWork(list){
   const kept = [], inUse = new Set(list.map(x=>x.name));
   list.forEach((item, idx)=>{
     const m = byName[item.name] || item;
     if(!isBandMove(m)){ kept.push(item); return; }
-    const alt = loadableFor(m, inUse, (state.seed || 1) * 7 + idx * 97);
+    const alt = loadableFor(m, inUse, (genSeed() || 1) * 7 + idx * 97);
     if(alt){ inUse.add(alt.n); kept.push(Object.assign({}, item, { name:alt.n, note:alt.note })); }
     /* Nothing loadable trains this at all under the current kit — leave the slot out rather
        than keep easy work in the middle of a session. */
@@ -2867,8 +2879,9 @@ function guardPrimaries(list){
 const stageLen = () => (weekCount() <= 4 ? 1 : 2);
 const stageCount = () => Math.min(6, Math.ceil(weekCount() / stageLen()));
 const stageOf = week => Math.floor((Math.max(1, week || 1) - 1) / stageLen());
-function buildStagesFor(d, seedBase, ctx){
+function buildStagesFor(d, seedBase, ctx, totalIn){
   const _s = pgCtx(ctx);
+  const _total = () => totalIn || weekCount();
   /* Stages are derived from the stored list, which already holds the finisher appended last
      time — so a new one accumulated on every version bump, and a bodyweight mobility drill
      could be left carrying a stale burnout flag beside its own working-set target. Clear both
@@ -2913,7 +2926,7 @@ function buildStagesFor(d, seedBase, ctx){
       (m.g || []).forEach(g=>isolated.add(g));
       const gk = goalForTier(m.tier, m.p);
       base.push({ name:m.n, note:m.note, goal:gk,
-        targets:genTargets(m.tier === 1 ? 4 : 3, gk, weekCount(), m.p, m.tier, d.dayIdx || 0, 0, loadKindOf(m), m.n) });
+        targets:genTargets(m.tier === 1 ? 4 : 3, gk, _total(), m.p, m.tier, d.dayIdx || 0, 0, loadKindOf(m), m.n) });
     }
   }
   if(hasLoadable()){
@@ -3058,7 +3071,7 @@ function buildStagesFor(d, seedBase, ctx){
       chosen.add(mm ? mm.n : x.name);
       const sets = parseInt(String((x.targets || [])[0] || ''), 10) || (mm && mm.tier === 1 ? 4 : 3);
       const gk = mm ? goalForTier(mm.tier, mm.p) : (x.goal || primaryGoal());
-      const next = mm ? genTargets(sets, gk, weekCount(), mm.p, mm.tier, d.dayIdx || 0, st, loadKindOf(mm), mm.n) : null;
+      const next = mm ? genTargets(sets, gk, _total(), mm.p, mm.tier, d.dayIdx || 0, st, loadKindOf(mm), mm.n) : null;
       return Object.assign({}, x,
         mm ? { name:mm.n, note:mm.note, goal:gk } : {},
         next && next.length ? { targets:next } : {});
@@ -3081,7 +3094,7 @@ function buildStagesFor(d, seedBase, ctx){
       if(!from || !to || progressionOK(from, to)) return x;
       const gk = from.goal || goalForTier(from.tier, from.p);
       const sets = parseInt(String((was.targets || [])[0] || ''), 10) || (from.tier === 1 ? 4 : 3);
-      const next = genTargets(sets, gk, weekCount(), from.p, from.tier, d.dayIdx || 0, s, loadKindOf(from), from.n);
+      const next = genTargets(sets, gk, _total(), from.p, from.tier, d.dayIdx || 0, s, loadKindOf(from), from.n);
       return Object.assign({}, x, { name:from.n, note:from.note, goal:gk },
         next && next.length ? { targets:next } : {});
     });
@@ -4893,13 +4906,13 @@ function fillDeficiencies(plan){
   }
   return plan;
 }
-function buildDay(dayKey, dayIndex, used, ctx){
+function buildDay(dayKey, dayIndex, used, ctx, seedIn){
   const _s = pgCtx(ctx);
   const tpl = DAYS[dayKey];
   if(!tpl) return [];
   // repeating the same day shape (full body ×4) should reuse the big lifts, not exhaust the bank
   const repeated = dayKey.indexOf('full') === 0;
-  const seed = (state.seed || 1) * 31 + dayIndex * 977;
+  const seed = ((seedIn != null ? seedIn : state.seed) || 1) * 31 + dayIndex * 977;
   const wanted = wantedGroups(), taken = new Set(), out = [];
   /* A power day opens with plyometric slots, which are never the day's loadable compounds. The
      compound guard counts the strength slots themselves — keyed to the index, the squat and the
@@ -6173,34 +6186,66 @@ function shuffleBank(){ state.seed = Math.floor(Math.random()*99999) + 1; render
    including the mid-function writes to state.weeks, which buildStagesFor reads back through
    weekCount(). Reordering those changes which program you get, so they stay exactly as they
    were; handoff/systems-golden.json holds this to byte-identical output. */
+/* Returns the finished program as a plain object and writes nothing. The two week counts are
+   captured explicitly because the original interleaved them: the first pass built targets
+   against whatever weekCount() returned on entry, then state.weeks was written and the staging
+   pass read the NEW value back. Keeping both values distinct is what preserves the produced
+   program exactly — `weeksRaw` is what state.weeks became, `weeksStaged` is what weekCount()
+   returned after that write, clamped the same way. */
 function composeProgram(seed, ctx){
   const _s = pgCtx(ctx);
-  state.seed = seed;
+  const _prevSeed = _composeSeed;
+  _composeSeed = seed;
+  try{
+  const weeksRaw = _s.weeks || 4;
+  const weeksStaged = Math.max(4, Math.min(12, weeksRaw));
   const keys = splitFor(_s.liftDays), names = dayNames(keys), used = new Set();
   const newPlan = keys.map((k,di)=>({
     id: Date.now()+di, name: names[di],
-    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
+    exercises: guardPrimaries(fitDayToTime(fillDayToTime(buildDay(k, di, used, _s, seed).map(m=>({ name:m.n, targets:genTargets(m.sets, goalForTier(m.tier, m.p), null, m.p, m.tier, di, 0, loadKindOf(m), m.n), note:m.note, goal:goalForTier(m.tier, m.p) })), 1, di, _s), 1))
   }));
-  state.adaptations = { focus:_s.focus, emphasis:_s.emphasis.slice(), injuries:_s.injuries.slice(),
+  const adaptations = { focus:_s.focus, emphasis:_s.emphasis.slice(), injuries:_s.injuries.slice(),
     equip:_s.equip, notes:adaptationNotes(_s) };
-  state.setup = JSON.parse(JSON.stringify(_s));
-  state.weeks = _s.weeks || 4;
-  newPlan.forEach((d, di)=>{ d.dayIdx = di; buildStagesFor(d, (state.seed || 1) * 31 + di * 977, _s); });
-  governVolume(newPlan, _s);
+  /* from here the block length is the NEW one — the same boundary the old state.weeks write drew */
+  const _prevWeeks = _composeWeeks;
+  _composeWeeks = weeksRaw;
+  try{
+    newPlan.forEach((d, di)=>{ d.dayIdx = di; buildStagesFor(d, (seed || 1) * 31 + di * 977, _s, weeksStaged); });
+    governVolume(newPlan, _s);
+  } finally { _composeWeeks = _prevWeeks; }
   newPlan.forEach(d=>{ if(d.stages && d.stages.length) d.exercises = d.stages[0]; });
-  state.plan = newPlan;
-  ui.dayId = newPlan[0].id;
-  state.weekNames = genWeekNames(primaryGoal(), state.weeks, _s);
-  state.runVisible = _s.runGoal !== 'none' && _s.runDays > 0;
-  state.runGoal = _s.runGoal;
-  state.runPace = _s.runPace || 0;
-  state.runExp = _s.runExp || 'some';
-  state.sched = buildSchedule(names, state.runVisible ? _s.runDays : 0, _s.runGoal,
-    startDow({ startDate:_s.startDate, today:todayISO() }),
-    trainDows({ trainDows:_s.trainDows, liftDays:_s.liftDays }));
-  state.week = 1;
-  state.startDate = _s.startDate || todayISO();
-  return state.plan;
+  const runVisible = _s.runGoal !== 'none' && _s.runDays > 0;
+  return {
+    seed, plan:newPlan, dayId:newPlan[0].id, adaptations,
+    setup: JSON.parse(JSON.stringify(_s)),
+    weeks: weeksRaw,
+    weekNames: genWeekNames(primaryGoal(), weeksRaw, _s),
+    runVisible, runGoal:_s.runGoal, runPace:_s.runPace || 0, runExp:_s.runExp || 'some',
+    sched: buildSchedule(names, runVisible ? _s.runDays : 0, _s.runGoal,
+      startDow({ startDate:_s.startDate, today:todayISO() }),
+      trainDows({ trainDows:_s.trainDows, liftDays:_s.liftDays })),
+    week: 1,
+    startDate: _s.startDate || todayISO()
+  };
+  } finally { _composeSeed = _prevSeed; }
+}
+/* The shell owns writing a composed program into the app's state. */
+function applyProgram(p){
+  state.seed = p.seed;
+  state.adaptations = p.adaptations;
+  state.setup = p.setup;
+  state.weeks = p.weeks;
+  state.plan = p.plan;
+  ui.dayId = p.dayId;
+  state.weekNames = p.weekNames;
+  state.runVisible = p.runVisible;
+  state.runGoal = p.runGoal;
+  state.runPace = p.runPace;
+  state.runExp = p.runExp;
+  state.sched = p.sched;
+  state.week = p.week;
+  state.startDate = p.startDate;
+  return p.plan;
 }
 async function generateProgram(){
   const model = GOAL_MODELS[primaryGoal()];
@@ -6213,7 +6258,7 @@ async function generateProgram(){
   if(hasCurrent && !await askConfirm('Build a new program? Your current one and everything logged against it move to Program history — you can reopen it any time.')) return;
   if(!await clearOpenForRebuild('Building a new program')) return;
   archiveCurrent();
-  composeProgram(Math.floor(Math.random() * 99999) + 1);   // a new program is a new draw
+  applyProgram(composeProgram(Math.floor(Math.random() * 99999) + 1));   // a new program is a new draw
   await save(); go('today'); toast('New '+model.label+' program built');
 }
 /* Every build button routes through here. An exception inside an async handler goes nowhere —
